@@ -51,6 +51,22 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
+            <plugin>
+                <artifactId>exec-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <executions>
+                    <execution>
+                        <id>Native</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${basedir}/native.sh</executable>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
@@ -73,9 +89,12 @@
                         <fileset>
                             <directory>gen-external-apklibs</directory>
                         </fileset>
+                        <fileset>
+                            <directory>res/raw</directory>
+                        </fileset>
                     </filesets>
                 </configuration>
             </plugin>
-		</plugins>
+        </plugins>
 	</build>
 </project>
