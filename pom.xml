@@ -60,6 +60,22 @@
 					</sdk>
 				</configuration>
 			</plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>libs</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>obj</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>gen-external-apklibs</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 </project>
