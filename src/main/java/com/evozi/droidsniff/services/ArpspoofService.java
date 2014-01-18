@@ -68,8 +68,8 @@ public class ArpspoofService extends IntentService {
 		String gateway = bundle.getString("gateway");
 		String wifiInterface = bundle.getString("interface");
 		
-		final String command = localBin + " -s 1 -i " + wifiInterface + " " + gateway;
-		
+		final String command = localBin + " -i " + wifiInterface + " " + gateway;
+
 		SystemHelper.execSUCommand("chmod 777 " + SystemHelper.getARPSpoofBinaryPath(this), ListenActivity.debugging);
 		SystemHelper.execSUCommand("echo 1 > " + IPV4_FILEPATH, ListenActivity.debugging);
 		
