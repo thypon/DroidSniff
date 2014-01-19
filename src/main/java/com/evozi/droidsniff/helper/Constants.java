@@ -1,5 +1,7 @@
 package com.evozi.droidsniff.helper;
 
+import java.util.*;
+
 public interface Constants {
 
 	public static final int 	MENU_WIFILIST_ID 			= 0;
@@ -36,4 +38,10 @@ public interface Constants {
 	public static final int 	ID_EXPORT					= 7;
 	public static final int 	ID_EXTERNAL					= 8;
 
+    public static final Set<String> ARCH = new HashSet<String>() {{
+        add("armeabi");
+        add("armeabi-v7a");
+        add("mips");
+        add("x86");
+    }};
 }

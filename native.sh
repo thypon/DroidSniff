@@ -12,4 +12,20 @@ cd $DIR/jni
 ndk-build
 cd $DIR
 mkdir -p res/raw/
-cp libs/armeabi/* res/raw/
+
+cd $DIR/libs
+ARCHS=$(ls)
+
+cd $DIR
+
+for ARCH in $ARCHS
+do
+    echo "Working for $ARCH"
+    NORM_ARCH=$(echo $ARCH | tr '-' '_')
+
+    for FILE in $DIR/libs/$ARCH/*
+    do
+        echo "Coping $FILE in $DIR/res/raw/$(basename $FILE)_$NORM_ARCH"
+        cp $FILE $DIR/res/raw/$(basename $FILE)_$NORM_ARCH
+    done
+done

@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import android.os.Build;
 import com.evozi.droidsniff.activities.ListenActivity;
 
 import android.content.Context;
@@ -39,8 +40,9 @@ public class SetupHelper {
 
 	public static void checkPrerequisites(Context c) {
 		if (Constants.DEBUG) Log.d(Constants.APPLICATION_TAG, "CHECKPREREQUISITES");
-		InputStream inDroidSheep = c.getResources().openRawResource(R.raw.droidsniff);
-		InputStream inARPSpoof = c.getResources().openRawResource(R.raw.arpspoof);
+		InputStream inDroidSheep = c.getResources().openRawResource(getExecutableResourceId(c, "droidsniff"));
+		InputStream inARPSpoof = c.getResources().openRawResource(getExecutableResourceId(c, "arpspoof"));
+
 		FileOutputStream out;
 		try {
 			File fDroidSniff = new File(SystemHelper.getDroidSheepBinaryPath(c));
@@ -189,7 +191,7 @@ public class SetupHelper {
 			String line = null;
 			ListenActivity.debugBuffer.append("\n");
 			while ((line = reader.readLine())!=null) {
-				ListenActivity.debugBuffer.append(line + "\n");
+				ListenActivity.debugBuffer.append(line).append("\n");
 			}
 			process.waitFor();
 		} catch (Exception e) {
@@ -207,7 +209,7 @@ public class SetupHelper {
 			String line = null;
 			ListenActivity.debugBuffer.append("\n");
 			while ((line = reader.readLine())!=null) {
-				ListenActivity.debugBuffer.append(line + "\n");
+				ListenActivity.debugBuffer.append(line).append("\n");
 			}
 			process.waitFor();
 			process = Runtime.getRuntime().exec("ls -l " + SystemHelper.getARPSpoofBinaryPath(c));
@@ -218,7 +220,7 @@ public class SetupHelper {
 			String line1 = null;
 			ListenActivity.debugBuffer.append("\n");
 			while ((line1 = reader1.readLine())!=null) {
-				ListenActivity.debugBuffer.append(line1 + "\n");
+				ListenActivity.debugBuffer.append(line1).append("\n");
 			}
 			process.waitFor();
 		} catch (Exception e) {
@@ -228,4 +230,20 @@ public class SetupHelper {
 		}
 	}
 
+    private static int getExecutableResourceId(Context c, String executable) {
+        return c.getResources()
+                .getIdentifier(
+                        "raw/" + executable + "_" + getBestArchitecture().replace('-', '_'),
+                        null, c.getPackageName());
+    }
+
+    private static String getBestArchitecture() {
+        if (Constants.ARCH.contains(Build.CPU_ABI)) {
+            return Build.CPU_ABI;
+        } else if (Constants.ARCH.contains(Build.CPU_ABI2)) {
+            return Build.CPU_ABI2;
+        } else {
+            throw new IllegalStateException("No CPU ABI Available");
+        }
+    }
 }
