@@ -685,7 +685,7 @@ public class ListenActivity extends SherlockActivity implements
 			return;
 		}
 		
-		for (CookieWrapper cookieWrapper : auth.getCookies()) {
+		for (Session cookieWrapper : auth.getSessions()) {
 			Cookie cookie = cookieWrapper.getCookie();
 			String cookieString = cookie.getName() + "=" + cookie.getValue() + "; domain=" + cookie.getDomain() + "; Path="
 					+ cookie.getPath();

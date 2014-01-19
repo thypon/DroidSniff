@@ -26,13 +26,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.evozi.droidsniff.objects.Session;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.cookie.BasicClientCookie;
-
-import com.evozi.droidsniff.objects.CookieWrapper;
 
 
 public class AuthDefinition {
@@ -61,7 +60,7 @@ public class AuthDefinition {
 			return null;
 		cookieListString = lst[0];
 
-		ArrayList<CookieWrapper> cookieList = new ArrayList<CookieWrapper>();
+		ArrayList<Session> sessions = new ArrayList<Session>();
 		String[] cookies = cookieListString.split(";");
 		for (String cookieString : cookies) {
 			String[] values = cookieString.split("=");
@@ -81,31 +80,31 @@ public class AuthDefinition {
 				cookie.setDomain(domain);
 				cookie.setPath("/");
 				cookie.setVersion(0);
-				cookieList.add(new CookieWrapper(cookie, url));
+				sessions.add(new Session(cookie, url));
 			}
 		}
-		if (cookieList != null && !cookieList.isEmpty() && cookieList.size() == cookieNames.size()) {
-			return new Auth(cookieList, url, mobileurl, getIdFromWebservice(cookieList), lst[2], this.name);
+		if (sessions != null && !sessions.isEmpty() && sessions.size() == cookieNames.size()) {
+			return new Auth(sessions, url, mobileurl, getIdFromWebservice(sessions), lst[2], this.name);
 		}
 		return null;
 	}
 
-	private String getIdFromWebservice(List<CookieWrapper> cookieList) {
+	private String getIdFromWebservice(List<Session> sessions) {
 		try {
 			Pattern pattern = Pattern.compile(regexp);
 
-			DefaultHttpClient httpclient = new DefaultHttpClient();
+			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpGet http = new HttpGet(idurl);
-			StringBuffer cookies = new StringBuffer();
-			for (CookieWrapper cookie : cookieList) {
-				cookies.append(cookie.getCookie().getName());
+			StringBuilder cookies = new StringBuilder();
+			for (Session session : sessions) {
+				cookies.append(session.getCookie().getName());
 				cookies.append("=");
-				cookies.append(cookie.getCookie().getValue());
+				cookies.append(session.getCookie().getValue());
 				cookies.append("; ");
 			}
 			http.addHeader("Cookie", cookies.toString());
 			ResponseHandler<String> responseHandler = new BasicResponseHandler();
-			String response = httpclient.execute(http, responseHandler);
+			String response = httpClient.execute(http, responseHandler);
 
 			Matcher matcher = pattern.matcher(response);
 			boolean matchFound = matcher.find();

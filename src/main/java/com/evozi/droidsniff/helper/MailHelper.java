@@ -1,7 +1,7 @@
 package com.evozi.droidsniff.helper;
 
 import com.evozi.droidsniff.auth.Auth;
-import com.evozi.droidsniff.objects.CookieWrapper;
+import com.evozi.droidsniff.objects.Session;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,13 +10,13 @@ public class MailHelper {
 	
 	public static void sendAuthByMail(Context c, Auth a) {
 		StringBuilder sb = new StringBuilder();
-		for (CookieWrapper cw : a.getCookies()) {
+		for (Session session : a.getSessions()) {
 			sb.append("[Cookie: \n");
-			sb.append("domain: ").append(cw.getCookie().getDomain()).append("\n");
-			sb.append("path: ").append(cw.getCookie().getPath()).append("\n");
-			sb.append(cw.getCookie().getName());
+			sb.append("domain: ").append(session.getCookie().getDomain()).append("\n");
+			sb.append("path: ").append(session.getCookie().getPath()).append("\n");
+			sb.append(session.getCookie().getName());
 			sb.append("=");
-			sb.append(cw.getCookie().getValue());
+			sb.append(session.getCookie().getValue());
 			sb.append(";]\n");
 		}
 				

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.apache.http.impl.cookie.BasicClientCookie;
 
 import com.evozi.droidsniff.helper.Constants;
-import com.evozi.droidsniff.objects.CookieWrapper;
+import com.evozi.droidsniff.objects.Session;
 
 import android.util.Log;
 
@@ -43,7 +43,7 @@ public class AuthDefinitionGeneric extends AuthDefinition {
 			theurl = host;
 		}
 
-		ArrayList<CookieWrapper> cookieList = new ArrayList<CookieWrapper>();
+		ArrayList<Session> sessions = new ArrayList<Session>();
 		String[] cookies = cookieListString.split(";");
 		for (String cookieString : cookies) {
 			String[] values = cookieString.split("=");
@@ -63,9 +63,9 @@ public class AuthDefinitionGeneric extends AuthDefinition {
 			cookie.setPath("/");
 			cookie.setVersion(0);
 
-			cookieList.add(new CookieWrapper(cookie, theurl));
+			sessions.add(new Session(cookie, theurl));
 		}
-		return new Auth(cookieList, theurl, null, null, lst[2], "generic");
+		return new Auth(sessions, theurl, null, null, lst[2], "generic");
 	}
 
 }

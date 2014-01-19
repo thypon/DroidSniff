@@ -1,4 +1,4 @@
-/*    	WifiChangeChecker.java checks the wireless network for changes
+/*    	CookieWrapper.java wraps an Android cookie
     	Copyright (C) 2011 Andreas Koch <koch.trier@gmail.com>
     	
     	This software was supported by the University of Trier 
@@ -19,25 +19,10 @@
 
 package com.evozi.droidsniff.objects;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
-@RequiredArgsConstructor
-public class WifiChangeChecker extends BroadcastReceiver {
-	@NonNull private final Handler handler;
-
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		Message m = handler.obtainMessage();
-		Bundle b = new Bundle();
-		b.putString("TYPE", "WIFICHANGE");
-		m.setData(b);
-		handler.sendMessage(m);
-	}
+@Value
+public class Session {
+	@NonNull org.apache.http.cookie.Cookie cookie;
+	@NonNull String url;
 }

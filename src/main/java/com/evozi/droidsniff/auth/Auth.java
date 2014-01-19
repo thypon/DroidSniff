@@ -22,13 +22,13 @@ package com.evozi.droidsniff.auth;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.evozi.droidsniff.objects.CookieWrapper;
+import com.evozi.droidsniff.objects.Session;
 
 public class Auth implements Serializable {
 	private static final long serialVersionUID = 7124255590593980755L;
 	
 	
-	ArrayList <CookieWrapper> cookieList = null;
+	ArrayList <Session> cookieList = null;
 	String url = null;
 	String mobileurl = null;
 	int id = 0; // Id contains a hash sum of all cookies in the object. 
@@ -38,15 +38,15 @@ public class Auth implements Serializable {
 	String authName = null;
 	String ip = null;
 	
-	public Auth(ArrayList<CookieWrapper> cookieList, String url, String mobileUrl, String name, String ip, String authName) {
-		this.cookieList = cookieList;
+	public Auth(ArrayList<Session> sessions, String url, String mobileUrl, String name, String ip, String authName) {
+		this.cookieList = sessions;
 		this.mobileurl = mobileUrl;
 		this.authName = authName;
 		this.generic = authName.equalsIgnoreCase("generic");
 		this.url = url;
 		this.ip = ip;
 		this.name = (name == null || name.equals(""))?url:name+" [" + url + "]";
-		for (CookieWrapper c : cookieList) {
+		for (Session c : sessions) {
 			id += c.getCookie().getValue().hashCode();
 		}
 	}
@@ -69,7 +69,7 @@ public class Auth implements Serializable {
 		return id;
 	}
 
-	public ArrayList<CookieWrapper> getCookies() {
+	public ArrayList<Session> getSessions() {
 		return cookieList;
 	}
 

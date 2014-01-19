@@ -26,7 +26,7 @@ import org.apache.http.cookie.Cookie;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.evozi.droidsniff.auth.Auth;
 import com.evozi.droidsniff.helper.Constants;
-import com.evozi.droidsniff.objects.CookieWrapper;
+import com.evozi.droidsniff.objects.Session;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -77,8 +77,8 @@ public class HijackActivity extends SherlockActivity implements Constants {
 		}
 		Log.i(APPLICATION_TAG,
 				"######################## COOKIE SETUP START ###############################");
-		for (CookieWrapper cookieWrapper : authToHijack.getCookies()) {
-			Cookie cookie = cookieWrapper.getCookie();
+		for (Session session : authToHijack.getSessions()) {
+			Cookie cookie = session.getCookie();
 			String cookieString = cookie.getName() + "=" + cookie.getValue()
 					+ "; domain=" + cookie.getDomain() + "; Path="
 					+ cookie.getPath();
