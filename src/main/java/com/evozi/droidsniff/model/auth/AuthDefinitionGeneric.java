@@ -1,11 +1,11 @@
-package com.evozi.droidsniff.auth;
+package com.evozi.droidsniff.model.auth;
 
 import java.util.ArrayList;
 
 import org.apache.http.impl.cookie.BasicClientCookie;
 
-import com.evozi.droidsniff.helper.Constants;
-import com.evozi.droidsniff.objects.Session;
+import com.evozi.droidsniff.common.Constants;
+import com.evozi.droidsniff.model.Session;
 
 import android.util.Log;
 

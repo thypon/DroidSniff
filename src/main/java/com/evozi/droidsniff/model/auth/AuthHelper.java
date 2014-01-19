@@ -16,7 +16,7 @@
 	    You should have received a copy of the GNU General Public License along
 	    with this program; if not, write to the Free Software Foundation, Inc.,
 	    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA. */
-package com.evozi.droidsniff.auth;
+package com.evozi.droidsniff.model.auth;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,9 +26,9 @@ import java.util.List;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.evozi.droidsniff.activities.ListenActivity;
-import com.evozi.droidsniff.helper.Constants;
-import com.evozi.droidsniff.helper.DBHelper;
+import com.evozi.droidsniff.controller.activity.ListenActivity;
+import com.evozi.droidsniff.common.Constants;
+import com.evozi.droidsniff.common.DBHelper;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;

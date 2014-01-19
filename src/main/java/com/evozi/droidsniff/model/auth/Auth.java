@@ -17,12 +17,12 @@
 	    with this program; if not, write to the Free Software Foundation, Inc.,
 	    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA. */
 
-package com.evozi.droidsniff.auth;
+package com.evozi.droidsniff.model.auth;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.evozi.droidsniff.objects.Session;
+import com.evozi.droidsniff.model.Session;
 
 public class Auth implements Serializable {
 	private static final long serialVersionUID = 7124255590593980755L;

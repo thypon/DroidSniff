@@ -1,4 +1,4 @@
-package com.evozi.droidsniff.arpspoof;
+package com.evozi.droidsniff.common.arpspoof;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

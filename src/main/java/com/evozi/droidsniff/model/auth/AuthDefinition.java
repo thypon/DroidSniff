@@ -19,14 +19,14 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.evozi.droidsniff.auth;
+package com.evozi.droidsniff.model.auth;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.evozi.droidsniff.objects.Session;
+import com.evozi.droidsniff.model.Session;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;

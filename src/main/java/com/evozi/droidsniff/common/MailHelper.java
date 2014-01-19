@@ -1,7 +1,7 @@
-package com.evozi.droidsniff.helper;
+package com.evozi.droidsniff.common;
 
-import com.evozi.droidsniff.auth.Auth;
-import com.evozi.droidsniff.objects.Session;
+import com.evozi.droidsniff.model.auth.Auth;
+import com.evozi.droidsniff.model.Session;
 
 import android.content.Context;
 import android.content.Intent;

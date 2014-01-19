@@ -24,14 +24,14 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.evozi.droidsniff.services;
+package com.evozi.droidsniff.controller.service;
 
 import java.io.IOException;
 
-import com.evozi.droidsniff.activities.ListenActivity;
-import com.evozi.droidsniff.arpspoof.ExecuteCommand;
-import com.evozi.droidsniff.helper.Constants;
-import com.evozi.droidsniff.helper.SystemHelper;
+import com.evozi.droidsniff.controller.activity.ListenActivity;
+import com.evozi.droidsniff.common.arpspoof.ExecuteCommand;
+import com.evozi.droidsniff.common.Constants;
+import com.evozi.droidsniff.common.SystemHelper;
 
 
 import android.app.IntentService;

@@ -1,20 +1,12 @@
-package com.evozi.droidsniff.helper;
+package com.evozi.droidsniff.common;
 
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import com.evozi.droidsniff.auth.AuthHelper;
+import com.evozi.droidsniff.model.auth.AuthHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.util.Log;
 import com.evozi.droidsniff.R;
 
 public class DialogHelper {

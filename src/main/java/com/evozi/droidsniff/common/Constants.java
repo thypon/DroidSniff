@@ -1,4 +1,4 @@
-package com.evozi.droidsniff.helper;
+package com.evozi.droidsniff.common;
 
 import java.util.*;
 

@@ -19,12 +19,12 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.evozi.droidsniff.objects;
+package com.evozi.droidsniff.view;
 
 import jcifs.UniAddress;
 
-import com.evozi.droidsniff.activities.ListenActivity;
-import com.evozi.droidsniff.auth.Auth;
+import com.evozi.droidsniff.controller.activity.ListenActivity;
+import com.evozi.droidsniff.model.auth.Auth;
 
 import android.content.Context;
 import android.content.res.Resources;

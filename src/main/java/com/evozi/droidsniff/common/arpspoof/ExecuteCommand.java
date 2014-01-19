@@ -23,16 +23,16 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.evozi.droidsniff.arpspoof;
+package com.evozi.droidsniff.common.arpspoof;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.evozi.droidsniff.activities.ListenActivity;
-import com.evozi.droidsniff.auth.AuthHelper;
-import com.evozi.droidsniff.helper.Constants;
+import com.evozi.droidsniff.controller.activity.ListenActivity;
+import com.evozi.droidsniff.model.auth.AuthHelper;
+import com.evozi.droidsniff.common.Constants;
 
 import android.util.Log;
 

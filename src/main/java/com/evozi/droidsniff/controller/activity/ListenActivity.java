@@ -19,7 +19,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.evozi.droidsniff.activities;
+package com.evozi.droidsniff.controller.activity;
 
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -35,18 +35,18 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.evozi.droidsniff.auth.Auth;
-import com.evozi.droidsniff.auth.AuthHelper;
-import com.evozi.droidsniff.helper.Constants;
-import com.evozi.droidsniff.helper.DBHelper;
-import com.evozi.droidsniff.helper.DialogHelper;
-import com.evozi.droidsniff.helper.MailHelper;
-import com.evozi.droidsniff.helper.SetupHelper;
-import com.evozi.droidsniff.helper.SystemHelper;
-import com.evozi.droidsniff.objects.SessionListView;
-import com.evozi.droidsniff.objects.WifiChangeReceiver;
-import com.evozi.droidsniff.services.ArpspoofService;
-import com.evozi.droidsniff.services.DroidSniffService;
+import com.evozi.droidsniff.model.auth.Auth;
+import com.evozi.droidsniff.model.auth.AuthHelper;
+import com.evozi.droidsniff.common.Constants;
+import com.evozi.droidsniff.common.DBHelper;
+import com.evozi.droidsniff.common.DialogHelper;
+import com.evozi.droidsniff.common.MailHelper;
+import com.evozi.droidsniff.common.SetupHelper;
+import com.evozi.droidsniff.common.SystemHelper;
+import com.evozi.droidsniff.view.SessionListView;
+import com.evozi.droidsniff.controller.receiver.WifiChangeReceiver;
+import com.evozi.droidsniff.controller.service.ArpspoofService;
+import com.evozi.droidsniff.controller.service.DroidSniffService;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;

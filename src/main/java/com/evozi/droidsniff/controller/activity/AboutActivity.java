@@ -17,7 +17,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.evozi.droidsniff.activities;
+package com.evozi.droidsniff.controller.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;

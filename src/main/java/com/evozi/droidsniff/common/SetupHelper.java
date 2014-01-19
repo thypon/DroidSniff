@@ -19,7 +19,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.evozi.droidsniff.helper;
+package com.evozi.droidsniff.common;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -30,11 +30,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import android.os.Build;
-import com.evozi.droidsniff.activities.ListenActivity;
+import com.evozi.droidsniff.controller.activity.ListenActivity;
 
 import android.content.Context;
 import android.util.Log;
-import com.evozi.droidsniff.R;
 
 public class SetupHelper {
 

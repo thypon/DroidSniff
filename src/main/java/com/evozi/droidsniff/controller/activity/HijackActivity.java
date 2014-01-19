@@ -19,14 +19,14 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.evozi.droidsniff.activities;
+package com.evozi.droidsniff.controller.activity;
 
 import org.apache.http.cookie.Cookie;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.evozi.droidsniff.auth.Auth;
-import com.evozi.droidsniff.helper.Constants;
-import com.evozi.droidsniff.objects.Session;
+import com.evozi.droidsniff.model.auth.Auth;
+import com.evozi.droidsniff.common.Constants;
+import com.evozi.droidsniff.model.Session;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
