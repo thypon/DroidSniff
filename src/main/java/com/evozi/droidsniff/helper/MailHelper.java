@@ -9,11 +9,11 @@ import android.content.Intent;
 public class MailHelper {
 	
 	public static void sendAuthByMail(Context c, Auth a) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (CookieWrapper cw : a.getCookies()) {
 			sb.append("[Cookie: \n");
-			sb.append("domain: " + cw.getCookie().getDomain() + "\n");
-			sb.append("path: " + cw.getCookie().getPath() + "\n");
+			sb.append("domain: ").append(cw.getCookie().getDomain()).append("\n");
+			sb.append("path: ").append(cw.getCookie().getPath()).append("\n");
 			sb.append(cw.getCookie().getName());
 			sb.append("=");
 			sb.append(cw.getCookie().getValue());
