@@ -12,4 +12,6 @@ So do not get DroidSniff to harm anybody or use it in order to gain unauthorized
 TODO
 ====
 
-Add SSLSniff
+- Add Regression Test
+- Add Unit Test
+- Add SSLSniff
