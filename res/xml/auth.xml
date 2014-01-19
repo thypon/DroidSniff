@@ -4,7 +4,7 @@
 		<name>Amazon</name>
 		<domain>amazon.com</domain>
 		<url>http://www.amazon.com</url>
-		<cookiename>x-acbde</cookiename>
+		<cookiename>x-main</cookiename>
 	</auth>
 	<auth>
 		<name>facebook</name>
@@ -16,7 +16,7 @@
 		<cookiename>c_user</cookiename>
 		<cookiename>datr</cookiename>
 		<cookiename>lu</cookiename>
-		<cookiename>xs</cookiename>
+		<cookiename>sct</cookiename>
 	</auth>
 	<auth>
 		<name>facebook - mobile</name>
@@ -48,7 +48,6 @@
 		<domain>linkedin.com</domain>
 		<url>http://www.linkedin.com</url>
 		<cookiename>bcookie</cookiename>
-		<cookiename>leo_auth_token</cookiename>
 		<regexp><![CDATA[(class="username">[:space:]*)([^<]*)(</a>)]]></regexp>
 	</auth>
 	<auth>
@@ -58,6 +57,7 @@
 		<mobileurl>http://mobile.yahoo.com</mobileurl>
 		<cookiename>T</cookiename>
 		<cookiename>Y</cookiename>
+		<cookiename>F</cookiename>
 		<regexp><![CDATA[(nickname-p2">[:space:]*)([^<]*)(</span>)]]></regexp>
 	</auth>
 	<auth>
@@ -69,14 +69,145 @@
 		<cookiename>HSID</cookiename>
 		<cookiename>PREF</cookiename>
 	</auth>
-	
-	<!--added-->
+
+
+    <!-- TODO Support Wordpress -->
+    <auth>
+        <name>Basecamp</name>
+        <domain>basecamphq.com</domain>
+        <cookiename>_basecamp_session</cookiename>
+        <cookiename>session_token</cookiename>
+    </auth>
+    <auth>
+        <name>bit.ly</name>
+        <domain>bit.ly</domain>
+        <url>http://bit.ly/</url>
+        <cookiename>user</cookiename>
+    </auth>
+    <auth>
+        <name>Cisco</name>
+        <domain>cisco.com</domain>
+        <url>http://tools.cisco.com/RPF/profile/profile_management.do</url>
+        <cookiename>SMIDENTITY</cookiename>
+    </auth>
+    <auth>
+        <name>CNET</name>
+        <domain>cnet.com</domain>
+        <url>http://www.cnet.com/</url>
+        <cookiename>urs_sessionId</cookiename>
+    </auth>
+    <auth>
+        <name>Enom</name>
+        <domain>enom.com</domain>
+        <cookiename>OatmealCookie</cookiename>
+        <cookiename>EmailAddress</cookiename>
+    </auth>
+    <auth>
+        <name>Evernote</name>
+        <domain>www.evernote.com</domain>
+        <url>https://www.evernote.com/Home.action</url>
+        <cookiename>auth</cookiename>
+    </auth>
+    <auth>
+        <name>Fiverr</name>
+        <domain>www.fiverr.com</domain>
+        <cookiename>_fiverr_session</cookiename>
+    </auth>
+    <auth>
+        <name>Foursquare</name>
+        <domain>foursquare.com</domain>
+        <url>http://foursquare.com/</url>
+        <cookiename>ext_id</cookiename>
+        <cookiename>XSESSIONID</cookiename>
+    </auth>
+    <auth>
+        <name>Gowalla</name>
+        <domain>gowalla.com</domain>
+        <url>https://gowalla.com/home</url>
+        <cookiename>__utma</cookiename>
+    </auth>
+    <auth>
+        <name>Harvest</name>
+        <domain>harvestapp.com</domain>
+        <cookiename>_harvest_sess</cookiename>
+    </auth>
+    <auth>
+        <name>GroupMe</name>
+        <domain>groupme.com</domain>
+        <url>http://groupme.com</url>
+        <cookiename>_groupme_session</cookiename>
+    </auth>
+    <auth>
+        <name>Hacker News</name>
+        <domain>news.ycombinator.com</domain>
+        <cookiename>user</cookiename>
+    </auth>
+	<auth>
+		<name>Windows Live</name>
+		<domain>live.com</domain>
+		<url>http://www.live.com/</url>
+		<cookiename>MSPProf</cookiename>
+		<cookiename>MSPAuth</cookiename>
+		<cookiename>RPSTAuth</cookiename>
+		<cookiename>NAP</cookiename>
+	</auth>
+	<auth>
+		<name>New York Times</name>
+		<domain>nytimes.com</domain>
+		<url>http://www.nytimes.com/</url>
+		<cookiename>NYT-S</cookiename>
+		<cookiename>nyt-d</cookiename>
+	</auth>
+	<auth>
+		<name>Posterous</name>
+		<domain>www.posterous.com</domain>
+		<url>http://www.posterous.com</url>
+		<cookiename>_sharebymail_session_id</cookiename>
+	</auth>	
+	<auth>
+		<name>Quora</name>
+		<domain>www.quora.com</domain>
+		<url>http://www.quora.com</url>
+		<cookiename>m-s</cookiename>
+		<cookiename>m-b</cookiename>
+	</auth>	
+	<auth>
+		<name>ToorCon: San Diego</name>
+		<domain>sandiego.toorcon.org</domain>
+		<cookiename>8cbdc47e247b091e401585ac21099eb6</cookiename>
+	</auth>	
+	<auth>
+		<name>ShutterStock</name>
+		<domain>www.shutterstock.com</domain>
+		<cookiename>ssssidd</cookiename>
+	</auth>	
+	<auth>
+		<name>Stack Overflow</name>
+		<domain>stackoverflow.com</domain>
+		<cookiename>usr</cookiename>
+	</auth>
+	<auth>
+		<name>Tumblr</name>
+		<domain>tumblr.com</domain>
+		<url>http://www.tumblr.com</url>
+		<cookiename>pfp</cookiename>
+	</auth>
+	<auth>
+		<name>Vimeo</name>
+		<domain>vimeo.com</domain>
+		<cookiename>vimeo</cookiename>
+	</auth>
 	<auth>
 		<name>Reddit</name>
 		<domain>reddit.com</domain>
 		<url>http://www.reddit.com</url>
         <mobileurl>http://www.reddit.com/.compact</mobileurl>
 		<cookiename>reddit_session</cookiename>
-		<cookiename>reddit_first</cookiename>
+	</auth>
+	<auth>
+		<name>Yelp</name>
+		<domain>yelp.com</domain>
+		<url>http://www.yelp.com</url>
+		<cookiename>__utma</cookiename>
 	</auth>
 </authdefinitions>
