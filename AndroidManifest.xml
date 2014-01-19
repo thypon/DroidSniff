@@ -19,7 +19,8 @@
     
 	<application
 		android:icon="@drawable/icon"
-		android:label="DroidSniff">
+		android:label="DroidSniff"
+        android:name=".controller.DroidsniffApplication">
 		<activity
 			android:configChanges="orientation|keyboardHidden"
 			android:name=".controller.activity.ListenActivity"

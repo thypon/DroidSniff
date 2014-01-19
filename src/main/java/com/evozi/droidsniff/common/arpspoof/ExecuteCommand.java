@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import com.evozi.droidsniff.controller.activity.ListenActivity;
-import com.evozi.droidsniff.model.auth.AuthHelper;
+import com.evozi.droidsniff.model.auth.AuthChecker;
 import com.evozi.droidsniff.common.Constants;
 
 import android.util.Log;
@@ -94,7 +94,7 @@ public class ExecuteCommand extends Thread {
 									+ command + "line: " + line + "\n");
 						}
 						if (listen) {
-							AuthHelper.process(line);
+							AuthChecker.get().process(line);
 						}
 					}
 				} catch (IOException e) {

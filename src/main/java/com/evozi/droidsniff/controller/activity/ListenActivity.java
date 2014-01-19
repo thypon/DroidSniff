@@ -35,14 +35,16 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.evozi.droidsniff.model.BlackList;
+import com.evozi.droidsniff.model.DB;
+import com.evozi.droidsniff.model.MailSender;
 import com.evozi.droidsniff.model.auth.Auth;
-import com.evozi.droidsniff.model.auth.AuthHelper;
 import com.evozi.droidsniff.common.Constants;
-import com.evozi.droidsniff.common.DBHelper;
 import com.evozi.droidsniff.common.DialogHelper;
-import com.evozi.droidsniff.common.MailHelper;
 import com.evozi.droidsniff.common.SetupHelper;
 import com.evozi.droidsniff.common.SystemHelper;
+import com.evozi.droidsniff.model.event.AuthEvent;
+import com.evozi.droidsniff.model.event.WifiChangeEvent;
 import com.evozi.droidsniff.view.SessionListView;
 import com.evozi.droidsniff.controller.receiver.WifiChangeReceiver;
 import com.evozi.droidsniff.controller.service.ArpspoofService;
@@ -81,6 +83,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.evozi.droidsniff.R;
+import de.greenrobot.event.EventBus;
 
 public class ListenActivity extends SherlockActivity implements
 		OnClickListener, OnItemClickListener, OnItemLongClickListener,
@@ -189,14 +192,57 @@ public class ListenActivity extends SherlockActivity implements
 				refreshHandler.stop();
 				refresh();
 				if (debugging) {
-					MailHelper.sendStringByMail(ListenActivity.this,
-							debugBuffer.toString());
+					MailSender.get().sendStringByMail(debugBuffer.toString());
 					debugging = false;
 					debugBuffer = null;
 				}
 			}
 		};
 	};
+
+    public void onEventMainThread(WifiChangeEvent wce) {
+        if (!isListening())
+            return;
+        Toast.makeText(getApplicationContext(),
+                getString(R.string.toast_wifi_lost), Toast.LENGTH_SHORT)
+                .show();
+        stopListening();
+        stopSpoofing();
+        cleanup();
+        updateNetworkSettings();
+    }
+
+    public void onEventMainThread(AuthEvent ae) {
+        switch (ae.getType()) {
+            case NEW:
+                Auth a = ae.getAuth();
+                if (!authList.contains(a)) {
+                    if (!a.isGeneric()) {
+                        authList.add(0, a);
+                    } else {
+                        authList.add(a);
+                    }
+                } else {
+                    int pos = authList.indexOf(a);
+                    if (!authList.get(pos).isSaved()) {
+                        authList.remove(pos);
+                    }
+                    authList.add(pos, a);
+                }
+                this.refresh();
+                this.notifyUser(false);
+                break;
+            case LOADED:
+                a = ae.getAuth();
+                if (!authList.contains(a)) {
+                    authList.add(0, a);
+                }
+                this.refresh();
+                this.notifyUser(false);
+                break;
+        }
+
+    }
 
 	RefreshHandler refreshHandler = new RefreshHandler();
 
@@ -228,6 +274,8 @@ public class ListenActivity extends SherlockActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+        EventBus.getDefault().register(this);
+
 		if (DEBUG)
 			Log.d(APPLICATION_TAG, "ONCREATE");
 
@@ -235,8 +283,7 @@ public class ListenActivity extends SherlockActivity implements
 
 		SetupHelper.checkPrerequisites(this.getApplicationContext());
 
-		AuthHelper.init(this.getApplicationContext(), handler);
-		WifiChangeReceiver wi = new WifiChangeReceiver(handler);
+		WifiChangeReceiver wi = new WifiChangeReceiver();
 		this.getApplicationContext().registerReceiver(wi,
 				new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
 		if (!SetupHelper.checkSu()) {
@@ -276,27 +323,8 @@ public class ListenActivity extends SherlockActivity implements
 		this.sessionListView.setOnCreateContextMenuListener(this);
 
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		ListenActivity.generic = DBHelper.getGeneric(this);
+		ListenActivity.generic = DB.get().getGeneric();
 		cbgeneric.setChecked(ListenActivity.generic);
-		showUpdate();
-	}
-
-	private void showUpdate() {
-		long last = DBHelper.getLastUpdateMessage(this);
-		long now = System.currentTimeMillis();
-		long dif = now - last;
-
-		// if (dif > (7 * 24 * 60 * 60 * 1000)) { // show once a week
-		if (dif > (1 * 24 * 60 * 60 * 1000)) { // show once a day?
-			// Update Checker
-			String VERSION_URL = "http://apps.evozi.com/android/droidsniff/version.php";
-			String REMOTE_APK_URL = "http://apps.evozi.com/android/droidsniff/DroidSniff.apk";
-			int ALERT_ICON = R.drawable.icon;
-			UpdateChecker uc = new UpdateChecker(this, VERSION_URL,
-					REMOTE_APK_URL, ALERT_ICON);
-			uc.startUpdateChecker();
-			DBHelper.setLastUpdateCheck(this, System.currentTimeMillis());
-		}
 	}
 
 	@Override
@@ -405,7 +433,7 @@ public class ListenActivity extends SherlockActivity implements
 			break;
 		case ID_BLACKLIST:
 			a = authList.get(sessionListViewSelected);
-			AuthHelper.addToBlackList(this, a.getName());
+            BlackList.get().add(a.getName());
 			authList.remove(a);
 			refresh();
 			break;
@@ -421,7 +449,7 @@ public class ListenActivity extends SherlockActivity implements
 			break;
 		case ID_EXPORT:
 			a = authList.get(sessionListViewSelected);
-			MailHelper.sendAuthByMail(this, a);
+			MailSender.get().sendAuthByMail(a);
 			break;
 		/**
 		 * case ID_EXTERNAL: clickExternal(sessionListViewSelected, true);
@@ -538,7 +566,7 @@ public class ListenActivity extends SherlockActivity implements
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		if (buttonView.equals(cbgeneric)) {
 			ListenActivity.generic = isChecked;
-			DBHelper.setGeneric(this, isChecked);
+			DB.get().setGeneric(isChecked);
 		}
 	}
 
@@ -896,5 +924,4 @@ public class ListenActivity extends SherlockActivity implements
 		m.setData(b);
 		handler.sendMessage(m);
 	}
-
 }

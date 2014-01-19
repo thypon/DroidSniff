@@ -1,6 +1,6 @@
 package com.evozi.droidsniff.common;
 
-import com.evozi.droidsniff.model.auth.AuthHelper;
+import com.evozi.droidsniff.model.BlackList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -39,8 +39,7 @@ public class DialogHelper {
 		builder.setMessage(R.string.clear_blacklist).setCancelable(false)
 				.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						DBHelper.clearBlacklist(DialogHelper.context);
-						AuthHelper.clearBlacklist();
+                        BlackList.get().clear();
 					}
 				}).setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {

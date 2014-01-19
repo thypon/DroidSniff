@@ -40,7 +40,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.cookie.BasicClientCookie;
 
 interface IAuthFactory {
-    Auth getAuthFromCookieString(String cookieListString);
+    Auth getAuth(String cookiesString);
 }
 
 @AllArgsConstructor
@@ -57,14 +57,14 @@ final class AuthFactory implements IAuthFactory {
         return this.idUrl != null ? this.idUrl : this.url;
     }
 
-	public Auth getAuthFromCookieString(String cookieListString) {
-		String[] lst = cookieListString.split("\\|\\|\\|");
+	public Auth getAuth(String cookiesString) {
+		String[] lst = cookiesString.split("\\|\\|\\|");
 		if (lst.length < 3)
 			return null;
-		cookieListString = lst[0];
+		cookiesString = lst[0];
 
 		final List<Session> sessions = new ArrayList<Session>();
-		String[] cookies = cookieListString.split(";");
+		String[] cookies = cookiesString.split(";");
 		for (String cookieString : cookies) {
 			String[] values = cookieString.split("=");
 			if (cookieString.endsWith("=")) {
@@ -123,23 +123,23 @@ final class AuthFactory implements IAuthFactory {
 	
 }
 
-final class AuthFactoryGeneric implements IAuthFactory {
+final class GenericAuthFactory implements IAuthFactory {
 
-    public Auth getAuthFromCookieString(String cookieListString) {
-        String[] lst = cookieListString.split("\\|\\|\\|");
+    public Auth getAuth(String cookiesString) {
+        String[] lst = cookiesString.split("\\|\\|\\|");
 
         if (lst.length < 3) {
-            Log.d(Constants.APPLICATION_TAG, "String not recognized: " + cookieListString);
+            Log.d(Constants.APPLICATION_TAG, "String not recognized: " + cookiesString);
             return null;
         }
         String host = lst[1].replaceAll("Host=", "");
         host = host.replaceAll(" ", "");
         if (host == null || host.replaceAll(" ", "").equals("")) {
-            Log.d(Constants.APPLICATION_TAG, "Host is empty or null: " + cookieListString);
+            Log.d(Constants.APPLICATION_TAG, "Host is empty or null: " + cookiesString);
             return null;
         }
 
-        cookieListString = lst[0];
+        cookiesString = lst[0];
         String theurl = "";
 
         if (!host.startsWith("http://")) {
@@ -149,7 +149,7 @@ final class AuthFactoryGeneric implements IAuthFactory {
         }
 
         ArrayList<Session> sessions = new ArrayList<Session>();
-        String[] cookies = cookieListString.split(";");
+        String[] cookies = cookiesString.split(";");
         for (String cookieString : cookies) {
             String[] values = cookieString.split("=");
             if (cookieString.endsWith("=")) {

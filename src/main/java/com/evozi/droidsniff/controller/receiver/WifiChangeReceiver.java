@@ -22,22 +22,12 @@ package com.evozi.droidsniff.controller.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import com.evozi.droidsniff.model.event.WifiChangeEvent;
+import de.greenrobot.event.EventBus;
 
-@RequiredArgsConstructor
 public class WifiChangeReceiver extends BroadcastReceiver {
-	@NonNull private final Handler handler;
-
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Message m = handler.obtainMessage();
-		Bundle b = new Bundle();
-		b.putString("TYPE", "WIFICHANGE");
-		m.setData(b);
-		handler.sendMessage(m);
+        EventBus.getDefault().post(WifiChangeEvent.get());
 	}
 }

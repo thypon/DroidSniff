@@ -30,7 +30,7 @@ import lombok.*;
 @Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @EqualsAndHashCode
-public class Auth implements Serializable {
+public final class Auth implements Serializable {
     private static final long serialVersionUID = 0x8008;
     private static Set<Auth> saved = new HashSet<Auth>();
 

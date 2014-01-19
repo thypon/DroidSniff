@@ -30,7 +30,7 @@ import java.io.Serializable;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode
-public class Session implements Serializable {
+public final class Session implements Serializable {
     private static final long serialVersionUID = 0x8008;
 
 	@NonNull @Getter private Cookie cookie;
