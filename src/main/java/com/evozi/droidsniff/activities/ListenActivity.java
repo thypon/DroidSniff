@@ -44,7 +44,7 @@ import com.evozi.droidsniff.helper.MailHelper;
 import com.evozi.droidsniff.helper.SetupHelper;
 import com.evozi.droidsniff.helper.SystemHelper;
 import com.evozi.droidsniff.objects.SessionListView;
-import com.evozi.droidsniff.objects.WifiChangeChecker;
+import com.evozi.droidsniff.objects.WifiChangeReceiver;
 import com.evozi.droidsniff.services.ArpspoofService;
 import com.evozi.droidsniff.services.DroidSniffService;
 
@@ -236,7 +236,7 @@ public class ListenActivity extends SherlockActivity implements
 		SetupHelper.checkPrerequisites(this.getApplicationContext());
 
 		AuthHelper.init(this.getApplicationContext(), handler);
-		WifiChangeChecker wi = new WifiChangeChecker(handler);
+		WifiChangeReceiver wi = new WifiChangeReceiver(handler);
 		this.getApplicationContext().registerReceiver(wi,
 				new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
 		if (!SetupHelper.checkSu()) {
