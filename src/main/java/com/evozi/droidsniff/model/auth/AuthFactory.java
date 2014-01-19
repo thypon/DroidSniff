@@ -26,33 +26,36 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.util.Log;
+import com.evozi.droidsniff.common.Constants;
 import com.evozi.droidsniff.model.Session;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.Value;
+import lombok.experimental.NonFinal;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.cookie.BasicClientCookie;
 
+interface IAuthFactory {
+    Auth getAuthFromCookieString(String cookieListString);
+}
 
-public class AuthDefinition {
-
-	ArrayList<String> cookieNames;
+@AllArgsConstructor
+final class AuthFactory implements IAuthFactory {
+	@NonNull List<String> cookieNames;
 	String url;
-	String domain;
-	String name;
-	String mobileurl;
-	String regexp = null;
-	String idurl  = null;
+    String mobileUrl;
+    @NonNull String domain;
+	@NonNull String name;
+    String idUrl;
+    String regexp;
 
-	public AuthDefinition(ArrayList<String> cookieNames, String url, String mobileurl, String domain, String name, String idurl, String regexp) {
-		this.cookieNames = cookieNames;
-		this.url = url;
-		this.domain = domain;
-		this.name = name;
-		this.mobileurl = mobileurl;
-		this.idurl = idurl != null ? idurl : url;
-		this.regexp = regexp;
-	}
+    private String getIdUrl() {
+        return this.idUrl != null ? this.idUrl : this.url;
+    }
 
 	public Auth getAuthFromCookieString(String cookieListString) {
 		String[] lst = cookieListString.split("\\|\\|\\|");
@@ -60,7 +63,7 @@ public class AuthDefinition {
 			return null;
 		cookieListString = lst[0];
 
-		ArrayList<Session> sessions = new ArrayList<Session>();
+		final List<Session> sessions = new ArrayList<Session>();
 		String[] cookies = cookieListString.split(";");
 		for (String cookieString : cookies) {
 			String[] values = cookieString.split("=");
@@ -83,8 +86,8 @@ public class AuthDefinition {
 				sessions.add(new Session(cookie, url));
 			}
 		}
-		if (sessions != null && !sessions.isEmpty() && sessions.size() == cookieNames.size()) {
-			return new Auth(sessions, url, mobileurl, getIdFromWebservice(sessions), lst[2], this.name);
+		if (!sessions.isEmpty() && sessions.size() == cookieNames.size()) {
+			return new Auth(sessions, url, mobileUrl, getIdFromWebservice(sessions), lst[2], this.name);
 		}
 		return null;
 	}
@@ -94,7 +97,7 @@ public class AuthDefinition {
 			Pattern pattern = Pattern.compile(regexp);
 
 			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpGet http = new HttpGet(idurl);
+			HttpGet http = new HttpGet(this.getIdUrl());
 			StringBuilder cookies = new StringBuilder();
 			for (Session session : sessions) {
 				cookies.append(session.getCookie().getName());
@@ -118,4 +121,55 @@ public class AuthDefinition {
 		return "";
 	}
 	
+}
+
+final class AuthFactoryGeneric implements IAuthFactory {
+
+    public Auth getAuthFromCookieString(String cookieListString) {
+        String[] lst = cookieListString.split("\\|\\|\\|");
+
+        if (lst.length < 3) {
+            Log.d(Constants.APPLICATION_TAG, "String not recognized: " + cookieListString);
+            return null;
+        }
+        String host = lst[1].replaceAll("Host=", "");
+        host = host.replaceAll(" ", "");
+        if (host == null || host.replaceAll(" ", "").equals("")) {
+            Log.d(Constants.APPLICATION_TAG, "Host is empty or null: " + cookieListString);
+            return null;
+        }
+
+        cookieListString = lst[0];
+        String theurl = "";
+
+        if (!host.startsWith("http://")) {
+            theurl = "http://" + host;
+        } else {
+            theurl = host;
+        }
+
+        ArrayList<Session> sessions = new ArrayList<Session>();
+        String[] cookies = cookieListString.split(";");
+        for (String cookieString : cookies) {
+            String[] values = cookieString.split("=");
+            if (cookieString.endsWith("=")) {
+                values[values.length - 1] = values[values.length - 1] + "=";
+            }
+            values[0] = values[0].replaceAll("Cookie:", "");
+            values[0] = values[0].replaceAll(" ", "");
+            String val = "";
+            for (int i = 1; i < values.length; i++) {
+                if (i > 1)
+                    val += "=";
+                val += values[i];
+            }
+            BasicClientCookie cookie = new BasicClientCookie(values[0], val);
+            cookie.setDomain(host.replaceAll("www.", ""));
+            cookie.setPath("/");
+            cookie.setVersion(0);
+
+            sessions.add(new Session(cookie, theurl));
+        }
+        return new Auth(sessions, theurl, null, null, lst[2], "generic");
+    }
 }

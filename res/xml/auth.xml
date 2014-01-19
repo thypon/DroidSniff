@@ -4,35 +4,35 @@
 		<name>Amazon</name>
 		<domain>amazon.com</domain>
 		<url>http://www.amazon.com</url>
-		<cookiename>x-main</cookiename>
+		<cookieName>x-main</cookieName>
 	</auth>
 	<auth>
 		<name>facebook</name>
 		<domain>facebook.com</domain>
 		<url>http://www.facebook.com</url>
-		<mobileurl>http://m.facebook.com</mobileurl>
-		<idurl>http://m.facebook.com/profile.php</idurl>
+		<mobileUrl>http://m.facebook.com</mobileUrl>
+		<idUrl>http://m.facebook.com/profile.php</idUrl>
 		<regexp><![CDATA[(<title>[:space:]*)([^<]*)(</title>)]]></regexp>
-		<cookiename>c_user</cookiename>
-		<cookiename>datr</cookiename>
-		<cookiename>lu</cookiename>
-		<cookiename>sct</cookiename>
+		<cookieName>c_user</cookieName>
+		<cookieName>datr</cookieName>
+		<cookieName>lu</cookieName>
+		<cookieName>sct</cookieName>
 	</auth>
 	<auth>
 		<name>facebook - mobile</name>
 		<url>http://m.facebook.com</url>
 		<domain>facebook.com</domain>
-		<idurl>http://m.facebook.com/profile.php</idurl>
+		<idUrl>http://m.facebook.com/profile.php</idUrl>
 		<regexp><![CDATA[(<title>)([^<]*[:space:]*)(</title>)]]></regexp>
-		<cookiename>datr</cookiename>
-		<cookiename>m_user</cookiename>
+		<cookieName>datr</cookieName>
+		<cookieName>m_user</cookieName>
 	</auth>
 	<auth>
 		<name>flickr</name>
 		<domain>flickr.com</domain>
 		<url>http://www.flickr.com</url>
-		<mobileurl>http://m.flickr.com</mobileurl>
-		<cookiename>cookie_session</cookiename>
+		<mobileUrl>http://m.flickr.com</mobileUrl>
+		<cookieName>cookie_session</cookieName>
 		<regexp><![CDATA[(data-ywa-name="Account name">[:space:]*)([^<]*)(</a>)]]></regexp>
 	</auth>
 	<auth>
@@ -40,34 +40,34 @@
 		<domain>twitter.com</domain>
 		<url>http://www.twitter.com</url>
 		<regexp><![CDATA[(<span id="screen-name">[:space:]*)([^<]*)(</span>)]]></regexp>
-		<cookiename>auth_token</cookiename>
-		<cookiename>_twitter_sess</cookiename>
+		<cookieName>auth_token</cookieName>
+		<cookieName>_twitter_sess</cookieName>
 	</auth>
 	<auth>
 		<name>LinkedIn</name>
 		<domain>linkedin.com</domain>
 		<url>http://www.linkedin.com</url>
-		<cookiename>bcookie</cookiename>
+		<cookieName>bcookie</cookieName>
 		<regexp><![CDATA[(class="username">[:space:]*)([^<]*)(</a>)]]></regexp>
 	</auth>
 	<auth>
 		<name>Yahoo</name>
 		<domain>yahoo.com</domain>
 		<url>http://www.yahoo.com</url>
-		<mobileurl>http://mobile.yahoo.com</mobileurl>
-		<cookiename>T</cookiename>
-		<cookiename>Y</cookiename>
-		<cookiename>F</cookiename>
+		<mobileUrl>http://mobile.yahoo.com</mobileUrl>
+		<cookieName>T</cookieName>
+		<cookieName>Y</cookieName>
+		<cookieName>F</cookieName>
 		<regexp><![CDATA[(nickname-p2">[:space:]*)([^<]*)(</span>)]]></regexp>
 	</auth>
 	<auth>
 		<name>Google</name>
 		<domain>google.com</domain>
 		<url>http://www.google.com</url>
-		<cookiename>SID</cookiename>
-		<cookiename>NID</cookiename>
-		<cookiename>HSID</cookiename>
-		<cookiename>PREF</cookiename>
+		<cookieName>SID</cookieName>
+		<cookieName>NID</cookieName>
+		<cookieName>HSID</cookieName>
+		<cookieName>PREF</cookieName>
 	</auth>
 
 
@@ -75,139 +75,139 @@
     <auth>
         <name>Basecamp</name>
         <domain>basecamphq.com</domain>
-        <cookiename>_basecamp_session</cookiename>
-        <cookiename>session_token</cookiename>
+        <cookieName>_basecamp_session</cookieName>
+        <cookieName>session_token</cookieName>
     </auth>
     <auth>
         <name>bit.ly</name>
         <domain>bit.ly</domain>
         <url>http://bit.ly/</url>
-        <cookiename>user</cookiename>
+        <cookieName>user</cookieName>
     </auth>
     <auth>
         <name>Cisco</name>
         <domain>cisco.com</domain>
         <url>http://tools.cisco.com/RPF/profile/profile_management.do</url>
-        <cookiename>SMIDENTITY</cookiename>
+        <cookieName>SMIDENTITY</cookieName>
     </auth>
     <auth>
         <name>CNET</name>
         <domain>cnet.com</domain>
         <url>http://www.cnet.com/</url>
-        <cookiename>urs_sessionId</cookiename>
+        <cookieName>urs_sessionId</cookieName>
     </auth>
     <auth>
         <name>Enom</name>
         <domain>enom.com</domain>
-        <cookiename>OatmealCookie</cookiename>
-        <cookiename>EmailAddress</cookiename>
+        <cookieName>OatmealCookie</cookieName>
+        <cookieName>EmailAddress</cookieName>
     </auth>
     <auth>
         <name>Evernote</name>
         <domain>www.evernote.com</domain>
         <url>https://www.evernote.com/Home.action</url>
-        <cookiename>auth</cookiename>
+        <cookieName>auth</cookieName>
     </auth>
     <auth>
         <name>Fiverr</name>
         <domain>www.fiverr.com</domain>
-        <cookiename>_fiverr_session</cookiename>
+        <cookieName>_fiverr_session</cookieName>
     </auth>
     <auth>
         <name>Foursquare</name>
         <domain>foursquare.com</domain>
         <url>http://foursquare.com/</url>
-        <cookiename>ext_id</cookiename>
-        <cookiename>XSESSIONID</cookiename>
+        <cookieName>ext_id</cookieName>
+        <cookieName>XSESSIONID</cookieName>
     </auth>
     <auth>
         <name>Gowalla</name>
         <domain>gowalla.com</domain>
         <url>https://gowalla.com/home</url>
-        <cookiename>__utma</cookiename>
+        <cookieName>__utma</cookieName>
     </auth>
     <auth>
         <name>Harvest</name>
         <domain>harvestapp.com</domain>
-        <cookiename>_harvest_sess</cookiename>
+        <cookieName>_harvest_sess</cookieName>
     </auth>
     <auth>
         <name>GroupMe</name>
         <domain>groupme.com</domain>
         <url>http://groupme.com</url>
-        <cookiename>_groupme_session</cookiename>
+        <cookieName>_groupme_session</cookieName>
     </auth>
     <auth>
         <name>Hacker News</name>
         <domain>news.ycombinator.com</domain>
-        <cookiename>user</cookiename>
+        <cookieName>user</cookieName>
     </auth>
 	<auth>
 		<name>Windows Live</name>
 		<domain>live.com</domain>
 		<url>http://www.live.com/</url>
-		<cookiename>MSPProf</cookiename>
-		<cookiename>MSPAuth</cookiename>
-		<cookiename>RPSTAuth</cookiename>
-		<cookiename>NAP</cookiename>
+		<cookieName>MSPProf</cookieName>
+		<cookieName>MSPAuth</cookieName>
+		<cookieName>RPSTAuth</cookieName>
+		<cookieName>NAP</cookieName>
 	</auth>
 	<auth>
 		<name>New York Times</name>
 		<domain>nytimes.com</domain>
 		<url>http://www.nytimes.com/</url>
-		<cookiename>NYT-S</cookiename>
-		<cookiename>nyt-d</cookiename>
+		<cookieName>NYT-S</cookieName>
+		<cookieName>nyt-d</cookieName>
 	</auth>
 	<auth>
 		<name>Posterous</name>
 		<domain>www.posterous.com</domain>
 		<url>http://www.posterous.com</url>
-		<cookiename>_sharebymail_session_id</cookiename>
+		<cookieName>_sharebymail_session_id</cookieName>
 	</auth>	
 	<auth>
 		<name>Quora</name>
 		<domain>www.quora.com</domain>
 		<url>http://www.quora.com</url>
-		<cookiename>m-s</cookiename>
-		<cookiename>m-b</cookiename>
+		<cookieName>m-s</cookieName>
+		<cookieName>m-b</cookieName>
 	</auth>	
 	<auth>
 		<name>ToorCon: San Diego</name>
 		<domain>sandiego.toorcon.org</domain>
-		<cookiename>8cbdc47e247b091e401585ac21099eb6</cookiename>
+		<cookieName>8cbdc47e247b091e401585ac21099eb6</cookieName>
 	</auth>	
 	<auth>
 		<name>ShutterStock</name>
 		<domain>www.shutterstock.com</domain>
-		<cookiename>ssssidd</cookiename>
+		<cookieName>ssssidd</cookieName>
 	</auth>	
 	<auth>
 		<name>Stack Overflow</name>
 		<domain>stackoverflow.com</domain>
-		<cookiename>usr</cookiename>
+		<cookieName>usr</cookieName>
 	</auth>
 	<auth>
 		<name>Tumblr</name>
 		<domain>tumblr.com</domain>
 		<url>http://www.tumblr.com</url>
-		<cookiename>pfp</cookiename>
+		<cookieName>pfp</cookieName>
 	</auth>
 	<auth>
 		<name>Vimeo</name>
 		<domain>vimeo.com</domain>
-		<cookiename>vimeo</cookiename>
+		<cookieName>vimeo</cookieName>
 	</auth>
 	<auth>
 		<name>Reddit</name>
 		<domain>reddit.com</domain>
 		<url>http://www.reddit.com</url>
-        <mobileurl>http://www.reddit.com/.compact</mobileurl>
-		<cookiename>reddit_session</cookiename>
+        <mobileUrl>http://www.reddit.com/.compact</mobileUrl>
+		<cookieName>reddit_session</cookieName>
 	</auth>
 	<auth>
 		<name>Yelp</name>
 		<domain>yelp.com</domain>
 		<url>http://www.yelp.com</url>
-		<cookiename>__utma</cookiename>
+		<cookieName>__utma</cookieName>
 	</auth>
 </authdefinitions>

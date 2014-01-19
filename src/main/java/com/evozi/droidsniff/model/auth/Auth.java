@@ -20,86 +20,48 @@
 package com.evozi.droidsniff.model.auth;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.evozi.droidsniff.model.Session;
+import lombok.*;
 
+@Value
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@EqualsAndHashCode
 public class Auth implements Serializable {
-	private static final long serialVersionUID = 7124255590593980755L;
-	
-	
-	ArrayList <Session> cookieList = null;
-	String url = null;
-	String mobileurl = null;
-	int id = 0; // Id contains a hash sum of all cookies in the object. 
-	boolean generic = true;
-	boolean saved = false;
-	String name = null;
-	String authName = null;
-	String ip = null;
-	
-	public Auth(ArrayList<Session> sessions, String url, String mobileUrl, String name, String ip, String authName) {
-		this.cookieList = sessions;
-		this.mobileurl = mobileUrl;
-		this.authName = authName;
-		this.generic = authName.equalsIgnoreCase("generic");
-		this.url = url;
-		this.ip = ip;
-		this.name = (name == null || name.equals(""))?url:name+" [" + url + "]";
-		for (Session c : sessions) {
-			id += c.getCookie().getValue().hashCode();
-		}
-	}
-	
-	// Two authentications are supposed to be identical, in case their hashes are the same.
-	@Override
-	public boolean equals(Object o) {
-		if (!(o instanceof Auth)) return false;
-		Auth a = (Auth) o;
-		return (a.getId() == this.id);
-	}
-	
-	@Override
-	public int hashCode() {
-		return id;
-	}
-	
+    private static final long serialVersionUID = 0x8008;
+    private static Set<Auth> saved = new HashSet<Auth>();
 
-	public int getId() {
-		return id;
-	}
+    @NonNull List<Session> sessions;
+	@NonNull String url;
+	String mobileUrl;
+    String name;
+    @NonNull String ip;
+    @NonNull String authName;
 
-	public ArrayList<Session> getSessions() {
-		return cookieList;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-	
-	public String getIp() {
-		return ip;
-	}
-
-	public String getMobileUrl() {
-		return mobileurl;
-	}
-	
+    public String getName() {
+        return (name == null || name.equals("")) ? url : name + " [" + url + "]";
+    }
 	
 	public boolean isGeneric() {
-		return generic;
-	}
-	
-	public boolean isSaved() {
-		return saved;
-	}
-	
-	public void setSaved(boolean saved) {
-		this.saved = saved;
+		return authName.equalsIgnoreCase("generic");
 	}
 
+    public boolean isSaved() {
+        return saved.contains(this);
+    }
+
+    public void setSaved(boolean save) {
+        if (save) {
+            saved.add(this);
+        } else {
+            saved.remove(this);
+        }
+    }
+
+    public int getId() {
+        return this.hashCode();
+    }
 }

@@ -39,8 +39,8 @@ import android.util.Log;
 import com.evozi.droidsniff.R;
 
 public class AuthHelper {
-	static HashMap<String, AuthDefinition> authDefList = new HashMap<String, AuthDefinition>();
-	static AuthDefinition generic = null;
+	static HashMap<String, IAuthFactory> authDefList = new HashMap<String, IAuthFactory>();
+	static IAuthFactory generic = null;
 	static String binaryPath = null;
 	static HashMap<String, Object> blacklist = null;
 	static Handler handler = null;
@@ -90,13 +90,13 @@ public class AuthHelper {
 					} else if (xpp.getName().equals("domain")) {
 						xpp.next();
 						domain = xpp.getText();
-					} else if (xpp.getName().equals("cookiename")) {
+					} else if (xpp.getName().equals("cookieName")) {
 						xpp.next();
 						cookieNames.add(xpp.getText());
-					} else if (xpp.getName().equals("mobileurl")) {
+					} else if (xpp.getName().equals("mobileUrl")) {
 						xpp.next();
 						mobileurl = xpp.getText();
-					} else if (xpp.getName().equals("idurl")) {
+					} else if (xpp.getName().equals("idUrl")) {
 						xpp.next();
 						idurl = xpp.getText();
 					} else if (xpp.getName().equals("regexp")) {
@@ -107,12 +107,12 @@ public class AuthHelper {
 				eventType = xpp.next();
 			}
 			if (name!= null && url != null && domain != null && cookieNames != null && !cookieNames.isEmpty()) {
-				authDefList.put(name, new AuthDefinition(cookieNames, url, mobileurl, domain, name, idurl, regexp));
+				authDefList.put(name, new AuthFactory(cookieNames, url, mobileurl, domain, name, idurl, regexp));
 			}
 			eventType = xpp.next();
 		}
 		if (ListenActivity.generic) {
-			generic = new AuthDefinitionGeneric();
+			generic = new AuthFactoryGeneric();
 		}
 	}
 
@@ -120,7 +120,7 @@ public class AuthHelper {
 		List<Auth> lst = new ArrayList<Auth>();
 		lst.clear();
 		for (String key : authDefList.keySet()) {
-			AuthDefinition ad = authDefList.get(key);
+			IAuthFactory ad = authDefList.get(key);
 			Auth a = ad.getAuthFromCookieString(line);
 			if (a != null) {
 				if (Constants.DEBUG) {					

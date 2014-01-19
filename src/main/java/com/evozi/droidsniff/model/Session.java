@@ -20,9 +20,40 @@
 package com.evozi.droidsniff.model;
 
 import lombok.*;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.cookie.BasicClientCookie;
 
-@Value
-public class Session {
-	@NonNull org.apache.http.cookie.Cookie cookie;
-	@NonNull String url;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+@RequiredArgsConstructor
+@EqualsAndHashCode
+public class Session implements Serializable {
+    private static final long serialVersionUID = 0x8008;
+
+	@NonNull @Getter private Cookie cookie;
+	@NonNull @Getter private final String url;
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeObject(cookie.getDomain());
+        out.writeObject(cookie.getName());
+        out.writeObject(cookie.getPath());
+        out.writeObject(cookie.getValue());
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        String domain = (String) in.readObject();
+        String name = (String) in.readObject();
+        String path = (String) in.readObject();
+        String value = (String) in.readObject();
+
+        BasicClientCookie cookie = new BasicClientCookie(name, value);
+        cookie.setDomain(domain);
+        cookie.setPath(path);
+        cookie.setVersion(0);
+
+        this.cookie = cookie;
+    }
 }
