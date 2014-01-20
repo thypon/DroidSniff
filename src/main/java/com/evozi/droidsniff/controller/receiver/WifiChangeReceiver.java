@@ -25,7 +25,7 @@ import android.content.Intent;
 import com.evozi.droidsniff.model.event.WifiChangeEvent;
 import de.greenrobot.event.EventBus;
 
-public class WifiChangeReceiver extends BroadcastReceiver {
+public final class WifiChangeReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
         EventBus.getDefault().post(WifiChangeEvent.get());
