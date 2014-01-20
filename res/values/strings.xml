@@ -60,4 +60,20 @@
 	<string name="close">Close</string>
 	<string name="reload">Reload</string>
     <string name="go">Go</string>
+
+    <string name="about">About</string>
+    <string name="about_content">
+        Version 1.0.0 Build 16
+
+        Please note:
+
+        DroidSniff was developed as a tool for testing the security of your accounts.
+        This software is neither made for using it in public networks, nor for hijacking any other persons account.
+        It should only demonstrate the poor security properties network connections without encryption have.
+        So do not get DroidSniff to harm anybody or use it in order to gain unauthorized access to any account you do not own! Use this software only for analyzing your own security!
+    </string>
+    <string name="faq">Faq</string>
+    <string name="faq_content"></string>
+    <string name="guide">Guide</string>
+    <string name="guide_content"></string>
 </resources>

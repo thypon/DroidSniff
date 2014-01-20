@@ -27,7 +27,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.extern.apachecommons.CommonsLog;
 import org.apache.http.cookie.Cookie;

@@ -17,6 +17,7 @@
         <lombok.version>1.12.2</lombok.version>
         <eventbus.version>2.2.0</eventbus.version>
         <butterknife.version>4.0.1</butterknife.version>
+        <bypass.version>1.1</bypass.version>
 	</properties>
 
 	<dependencies>
@@ -57,6 +58,13 @@
             <groupId>com.jakewharton</groupId>
             <artifactId>butterknife</artifactId>
             <version>${butterknife.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>in.uncod.android.bypass</groupId>
+            <artifactId>bypass</artifactId>
+            <type>apklib</type>
+            <version>${bypass.version}</version>
         </dependency>
     </dependencies>
 

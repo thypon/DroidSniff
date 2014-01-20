@@ -23,24 +23,38 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.TextView;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.evozi.droidsniff.R;
+import com.sun.swing.internal.plaf.metal.resources.metal_sv;
+import in.uncod.android.bypass.Bypass;
 
-public class AboutActivity extends SherlockActivity implements
+import java.util.HashMap;
+import java.util.Map;
+
+public final class AboutActivity extends SherlockActivity implements
 		ActionBar.TabListener {
+	@InjectView(R.id.text) TextView mSelected;
+    private final Bypass bypass = new Bypass();
 
-	private TextView mSelected;
+    private final Map<CharSequence, Integer> tabContent = new HashMap<CharSequence, Integer>() {{
+        put(getString(R.string.about), R.string.about_content);
+        put(getString(R.string.faq), R.string.faq_content);
+        put(getString(R.string.guide), R.string.guide_content);
+    }};
+
+    private final Map<CharSequence, CharSequence> cacheMarkdown = new HashMap<CharSequence, CharSequence>();
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
-
-		mSelected = (TextView) findViewById(R.id.text);
+        ButterKnife.inject(this);
 
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -49,33 +63,26 @@ public class AboutActivity extends SherlockActivity implements
 
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		ActionBar.Tab tab0 = getSupportActionBar().newTab();
-		tab0.setText("About");
-		tab0.setTabListener(this);
-		getSupportActionBar().addTab(tab0);
-
-		ActionBar.Tab tab1 = getSupportActionBar().newTab();
-		tab1.setText("FAQ");
-		tab1.setTabListener(this);
-		getSupportActionBar().addTab(tab1);
-
-		ActionBar.Tab tab2 = getSupportActionBar().newTab();
-		tab2.setText("Guide");
-		tab2.setTabListener(this);
-		getSupportActionBar().addTab(tab2);
+        for (CharSequence name : tabContent.keySet()) {
+            ActionBar.Tab tab = getSupportActionBar().newTab();
+            tab.setText(name);
+            tab.setTabListener(this);
+            getSupportActionBar().addTab(tab);
+        }
 	}
 
 	public void onTabReselected(Tab tab, FragmentTransaction transaction) {
 	}
 
 	public void onTabSelected(Tab tab, FragmentTransaction transaction) {
+        CharSequence content = cacheMarkdown.get(tab.getText());
 
-		if (tab.getText() == "About") {
-			mSelected
-					.setText("Version 1.0.0 Build 16\n\n\nPlease note:\n\nDroidSniff was developed as a tool for testing the security of your accounts.\n\nThis software is neither made for using it in public networks, nor for hijacking any other persons account.\n\nIt should only demonstrate the poor security properties network connections without encryption have.\nSo do not get DroidSniff to harm anybody or use it in order to gain unauthorized access to any account you do not own! Use this software only for analyzing your own security!");
-		} else {
-			mSelected.setText("Coming Soon");
-		}
+        if (content == null) {
+            content = bypass.markdownToSpannable(getString(tabContent.get(tab.getText())));
+            cacheMarkdown.put(tab.getText(), content);
+        }
+
+        mSelected.setText(content);
 	}
 
 	public void onTabUnselected(Tab tab, FragmentTransaction transaction) {
@@ -91,5 +98,4 @@ public class AboutActivity extends SherlockActivity implements
 		}
 		return false;
 	}
-
 }
