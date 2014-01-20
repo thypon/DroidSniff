@@ -42,15 +42,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.evozi.droidsniff.R;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.apachecommons.CommonsLog;
 
+@RequiredArgsConstructor
+@CommonsLog
 public class AuthListAdapter extends BaseAdapter {
 
-	private Context context;
-	private String hostname;
+	@NonNull
+    private final Context context;
 
-	public AuthListAdapter(Context context) {
-		this.context = context;
-	}
+	private String hostname;
 
 	public int getCount() {
 		return ListenActivity.authList.size();

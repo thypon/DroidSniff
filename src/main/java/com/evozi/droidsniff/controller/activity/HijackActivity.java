@@ -21,21 +21,29 @@
 
 package com.evozi.droidsniff.controller.activity;
 
+import android.content.Context;
+import android.content.Intent;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
+import lombok.extern.apachecommons.CommonsLog;
 import org.apache.http.cookie.Cookie;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.evozi.droidsniff.model.auth.Auth;
-import com.evozi.droidsniff.model.Constants;
 import com.evozi.droidsniff.model.Session;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.actionbarsherlock.view.MenuInflater;
 
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -47,55 +55,37 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.evozi.droidsniff.R;
 
-public class HijackActivity extends SherlockActivity implements Constants {
-	private WebView webview = null;
-	private Auth authToHijack = null;
+@CommonsLog
+public final class HijackActivity extends SherlockActivity {
+    @InjectView(R.id.webviewhijack)
+	WebView webview;
 
-	private class MyWebViewClient extends WebViewClient {
-		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			view.loadUrl(url);
-			return true;
-		}
-	}
+    @Getter(lazy = true)
+	private final Args args = BundleConverter.getArgs(this.getIntent().getExtras());
 
-	private void setupCookies() {
-		Log.i(APPLICATION_TAG,
-				"######################## COOKIE SETUP ###############################");
-		CookieManager manager = CookieManager.getInstance();
-		Log.i(APPLICATION_TAG,
-				"Cookiemanager has cookies: "
-						+ (manager.hasCookies() ? "YES" : "NO"));
-		if (manager.hasCookies()) {
-			manager.removeAllCookie();
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-			}
-			Log.i(APPLICATION_TAG, "Cookiemanager has still cookies: "
-					+ (manager.hasCookies() ? "YES" : "NO"));
-		}
-		Log.i(APPLICATION_TAG,
-				"######################## COOKIE SETUP START ###############################");
-		for (Session session : authToHijack.getSessions()) {
-			Cookie cookie = session.getCookie();
-			String cookieString = cookie.getName() + "=" + cookie.getValue()
-					+ "; domain=" + cookie.getDomain() + "; Path="
-					+ cookie.getPath();
-			Log.i(APPLICATION_TAG, "Setting up cookie: " + cookieString);
-			manager.setCookie(cookie.getDomain(), cookieString);
-		}
-		CookieSyncManager.getInstance().sync();
-		Log.i(APPLICATION_TAG,
-				"######################## COOKIE SETUP DONE ###############################");
-	}
+    @Value(staticConstructor = "of")
+    public static class Args {
+        @NonNull Auth auth;
+        @NonNull Boolean mobile;
+    }
 
-	@Override
+    public static void start(Context context, Args args) {
+        Bundle bundle = BundleConverter.getBundle(args);
+
+        Intent intent = new Intent(context, HijackActivity.class);
+        intent.putExtras(bundle);
+
+        context.startActivity(intent);
+    }
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		requestWindowFeature(Window.FEATURE_PROGRESS);
+
 		setContentView(R.layout.webview);
+        ButterKnife.inject(this);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		setSupportProgressBarIndeterminateVisibility(false);
@@ -103,34 +93,39 @@ public class HijackActivity extends SherlockActivity implements Constants {
 		CookieSyncManager.createInstance(this);
 	}
 
-	private void setupWebView() {
-		webview = (WebView) findViewById(R.id.webviewhijack);
-		webview.setWebViewClient(new MyWebViewClient());
-		WebSettings webSettings = webview.getSettings();
-		// webSettings.setUserAgentString("foo");
-		webSettings
-				.setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6");
-		webSettings.setJavaScriptEnabled(true);
-		webSettings.setAppCacheEnabled(false);
-		webSettings.setBuiltInZoomControls(true);
-		webview.setWebChromeClient(new WebChromeClient() {
-			public void onProgressChanged(WebView view, int progress) {
-				getSupportActionBar().setSubtitle(
-						HijackActivity.this.webview.getUrl());
-				setSupportProgressBarIndeterminateVisibility(true);
 
-				// Normalize our progress along the progress bar's scale
-				int mmprogress = (Window.PROGRESS_END - Window.PROGRESS_START)
-						/ 100 * progress;
-				setSupportProgress(mmprogress);
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-				if (progress == 100) {
-					setSupportProgressBarIndeterminateVisibility(false);
-				}
+        if (getArgs().getAuth() == null) {
+            Toast.makeText(this,
+                    R.string.authentication_error,
+                    Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
 
-			}
-		});
-	}
+        String url = getArgs().getMobile() ?
+                getArgs().getAuth().getMobileUrl() :
+                getArgs().getAuth().getUrl();
+
+        setupWebView();
+        setupCookies();
+
+        webview.loadUrl(url);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -141,27 +136,12 @@ public class HijackActivity extends SherlockActivity implements Constants {
 		return super.onKeyDown(keyCode, event);
 	}
 
-	// Menu Items
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuItem menu0 = menu.add(0, 0, 0, getString(R.string.back));
-		menu0.setIcon(R.drawable.ab_navigation_back);
-		menu0.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-		MenuItem menu1 = menu.add(0, 1, 0, getString(R.string.forward));
-		menu1.setIcon(R.drawable.ab_navigation_forward);
-		menu1.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-		MenuItem menu2 = menu.add(1, 2, 0, getString(R.string.reload));
-		menu2.setIcon(R.drawable.ab_navigation_refresh);
-		menu2.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-		MenuItem menu3 = menu.add(1, 3, 0, getString(R.string.changeurl));
-		menu3.setIcon(R.drawable.ab_location_web_site);
-		menu3.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		return true;
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.webview_menu, menu);
+        return true;
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -169,79 +149,122 @@ public class HijackActivity extends SherlockActivity implements Constants {
 		case android.R.id.home:
 			this.finish();
 			break;
-		case 0:
+		case R.id.webview_menu_back:
 			if (webview.canGoBack())
 				webview.goBack();
 			break;
-		case 1:
+		case R.id.webview_menu_forward:
 			if (webview.canGoForward())
 				webview.goForward();
 			break;
-		case 2:
+		case R.id.webview_menu_refresh:
 			webview.reload();
 			break;
-		case 3:
+		case R.id.webview_menu_changeurl:
 			selectURL();
 			break;
 		}
 		return false;
 	}
 
-	private void selectURL() {
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+    private final static class MyWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+    }
 
-		alert.setTitle(getString(R.string.changeurl));
-		alert.setMessage(getString(R.string.customurl));
+    private final static class BundleConverter {
+        private static String AUTH = "AUTH";
+        private static String MOBILE = "MOBILE";
 
-		// Set an EditText view to get user input
-		final EditText inputName = new EditText(this);
-		inputName.setText(HijackActivity.this.webview.getUrl());
-		alert.setView(inputName);
+        public static Args getArgs(Bundle bundle) {
+            return Args.of(
+                    (Auth) bundle.getSerializable(AUTH),
+                    bundle.getBoolean(MOBILE, false));
+        }
 
-		alert.setPositiveButton("Go", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				HijackActivity.this.webview.loadUrl(inputName.getText()
-						.toString());
-			}
-		});
+        public static Bundle getBundle(Args args) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(AUTH, args.getAuth());
+            bundle.putBoolean(MOBILE, args.getMobile());
+            return bundle;
+        }
+    }
 
-		alert.show();
-	}
+    private void selectURL() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-	@Override
-	protected void onStart() {
-		super.onStart();
+        alert.setTitle(getString(R.string.changeurl));
+        alert.setMessage(getString(R.string.customurl));
 
-		Object o = this.getIntent().getExtras()
-				.getSerializable(ListenActivity.BUNDLE_KEY_AUTH);
-		authToHijack = (Auth) o;
+        // Set an EditText view to get user input
+        final EditText inputName = new EditText(this);
+        inputName.setText(HijackActivity.this.webview.getUrl());
+        alert.setView(inputName);
 
-		if (authToHijack == null) {
-			Toast.makeText(this,
-					"Sorry, there was an error loading this Authentication",
-					Toast.LENGTH_LONG).show();
-			finish();
-			return;
-		}
+        alert.setPositiveButton(R.string.go, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                HijackActivity.this.webview.loadUrl(inputName.getText()
+                        .toString());
+            }
+        });
 
-		boolean mobile = this.getIntent().getExtras().getBoolean("MOBILE");
-		String url = mobile ? authToHijack.getMobileUrl() : authToHijack
-				.getUrl();
+        alert.show();
+    }
 
-		setupWebView();
-		setupCookies();
-		webview.loadUrl(url);
-	}
+    private void setupCookies() {
+        log.info("######################## COOKIE SETUP ###############################");
+        CookieManager manager = CookieManager.getInstance();
+        log.info("Cookiemanager has cookies: " + (manager.hasCookies() ? "YES" : "NO"));
+        if (manager.hasCookies()) {
+            manager.removeAllCookie();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+            }
+            log.info("Cookiemanager has still cookies: " + (manager.hasCookies() ? "YES" : "NO"));
+        }
+        log.info("######################## COOKIE SETUP START ###############################");
+        for (Session session : getArgs().getAuth().getSessions()) {
+            Cookie cookie = session.getCookie();
+            String cookieString = cookie.getName() + "=" + cookie.getValue()
+                    + "; domain=" + cookie.getDomain() + "; Path="
+                    + cookie.getPath();
+            log.info("Setting up cookie: " + cookieString);
+            manager.setCookie(cookie.getDomain(), cookieString);
+        }
+        CookieSyncManager.getInstance().sync();
+        log.info("######################## COOKIE SETUP DONE ###############################");
+    }
 
-	@Override
-	protected void onStop() {
-		super.onPause();
-		finish();
-	}
+    private void setupWebView() {
+        webview.setWebViewClient(new MyWebViewClient());
+        WebSettings webSettings = webview.getSettings();
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
+        webSettings
+                .setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6");
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setAppCacheEnabled(false);
+        webSettings.setBuiltInZoomControls(true);
+        webview.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                getSupportActionBar().setSubtitle(
+                        HijackActivity.this.webview.getUrl());
+                setSupportProgressBarIndeterminateVisibility(true);
 
+                // Normalize our progress along the progress bar's scale
+                int mmprogress = (Window.PROGRESS_END - Window.PROGRESS_START)
+                        / 100 * progress;
+                setSupportProgress(mmprogress);
+
+                if (progress == 100) {
+                    setSupportProgressBarIndeterminateVisibility(false);
+                }
+
+            }
+        });
+    }
 }
+

@@ -274,13 +274,13 @@ public class ListenActivity extends SherlockActivity implements
 		this.getApplicationContext().registerReceiver(wi,
 				new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
 		if (!Setup.get().checkSu()) {
-			DialogBuilder.showUnrooted(this);
+			DialogBuilder.get().showUnrooted(this);
 		}
 		if (!Setup.get().checkCommands()) {
-			DialogBuilder.installBusyBox(this);
+			DialogBuilder.get().installBusyBox(this);
 		}
 
-		DialogBuilder.showDisclaimer(this);
+		DialogBuilder.get().showDisclaimer(this);
 
 	}
 
@@ -392,7 +392,7 @@ public class ListenActivity extends SherlockActivity implements
 			mNotificationManager.cancelAll();
 			break;
 		case MENU_CLEAR_BLACKLIST_ID:
-			DialogBuilder.clearBlacklist(this);
+			DialogBuilder.get().clearBlacklist(this);
 			break;
 		}
 		return false;
@@ -665,51 +665,10 @@ public class ListenActivity extends SherlockActivity implements
 			return;
 		}
 
-		Bundle b = new Bundle();
-		b.putSerializable(BUNDLE_KEY_AUTH, a);
-		b.putBoolean(BUNDLE_KEY_MOBILE, mobilePage);
-
-		Intent intent = new Intent(ListenActivity.this, HijackActivity.class);
-		intent.putExtras(b);
-		startActivity(intent);
+        HijackActivity.start(
+                this,
+                HijackActivity.Args.of(a, mobilePage));
 	}
-
-	/**
-	public void clickExternal(int id, boolean mobilePage) {
-
-		if (authList.isEmpty()) {
-			Toast.makeText(this.getApplicationContext(), "No Auth available...", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		Auth a = null;
-		if (id < authList.size() && authList.get(id) != null) {
-			a = authList.get(id);
-		} else {
-			return;
-		}
-		
-		for (Session cookieWrapper : auth.getSessions()) {
-			Cookie cookie = cookieWrapper.getCookie();
-			String cookieString = cookie.getName() + "=" + cookie.getValue() + "; domain=" + cookie.getDomain() + "; Path="
-					+ cookie.getPath();
-			Log.i(APPLICATION_TAG, "Setting up cookie: " + cookieString);
-			Toast.makeText(this.getApplicationContext(), cookieString , Toast.LENGTH_SHORT).show();
-			//manager.setCookie(cookie.getDomain(), cookieString);
-		}
-
-
-		Bundle b = new Bundle();
-		b.putSerializable(BUNDLE_KEY_AUTH, a);
-		b.putBoolean(BUNDLE_KEY_MOBILE, mobilePage);
-		//this.SpoofURL + 
-		Toast.makeText(this.getApplicationContext(), this.auth.getUrl() + ":8080/" + this.auth.getUrl() + "@" + this.auth.getId(), Toast.LENGTH_SHORT).show();
-
-
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setData(Uri.parse(this.auth.getUrl() + ":8080/" + this.auth.getUrl() + "@" + this.auth.getId()));
-		startActivity(intent);
-	}
-	**/
 
 	private void startListening() {
 		Executor.get().execSUCommand(CLEANUP_COMMAND_DROIDSNIFF);

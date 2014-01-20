@@ -25,8 +25,7 @@ import android.view.View;
 import android.widget.ListView;
 
 public class SessionListView extends ListView {
-
-	public AuthListAdapter adapter = null;
+	private final AuthListAdapter adapter;
 	
 	public SessionListView(Context context) {
 		super(context);
@@ -35,9 +34,9 @@ public class SessionListView extends ListView {
 		this.setLongClickable(false);
 	}
 	
-	public SessionListView(Context c, AttributeSet attrset) {
-		super(c, attrset);
-		adapter = new AuthListAdapter(c);
+	public SessionListView(Context context, AttributeSet attrset) {
+        super(context, attrset);
+		adapter = new AuthListAdapter(context);
 		this.setAdapter(adapter);
 		this.setLongClickable(false);
 	}
@@ -45,10 +44,9 @@ public class SessionListView extends ListView {
 	public void refresh() {
 		adapter.notifyDataSetChanged(); 
 		int index = getFirstVisiblePosition();
-		View v = getChildAt(0);
-		int top = (v == null) ? 0 : v.getTop();
+		View view = getChildAt(0);
+		int top = (view == null) ? 0 : view.getTop();
 		this.setAdapter(adapter);
 		setSelectionFromTop(index, top);
 	}
-	
 }

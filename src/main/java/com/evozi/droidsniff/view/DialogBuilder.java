@@ -1,5 +1,7 @@
 package com.evozi.droidsniff.view;
 
+import android.app.Application;
+import android.content.Context;
 import com.evozi.droidsniff.model.BlackList;
 
 import android.app.Activity;
@@ -8,20 +10,30 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import com.evozi.droidsniff.R;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
-public class DialogBuilder {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class DialogBuilder {
+    private static DialogBuilder instance;
 
-	private static Activity context = null;
+    public static DialogBuilder get() {
+        if (instance == null) {
+            instance = new DialogBuilder();
+        }
 
-	public static void installBusyBox(Activity context) {
-		DialogBuilder.context = context;
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        return instance;
+    }
+
+	public void installBusyBox(final Activity activity) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setMessage(R.string.installbusybox).setCancelable(false)
 				.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						Intent goToMarket = null;
 						goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=stericson.busybox"));
-						DialogBuilder.context.startActivity(goToMarket);
+						activity.startActivity(goToMarket);
 						dialog.cancel();
 					}
 				}).setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
@@ -33,9 +45,8 @@ public class DialogBuilder {
 		alert.show();
 	}
 
-	public static void clearBlacklist(Activity context) {
-		DialogBuilder.context = context;
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+	public void clearBlacklist(final Activity activity) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setMessage(R.string.clear_blacklist).setCancelable(false)
 				.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
@@ -50,9 +61,8 @@ public class DialogBuilder {
 		alert.show();
 	}
 
-	public static void showUnrooted(Activity context) {
-		DialogBuilder.context = context;
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+	public void showUnrooted(final Activity activity) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setMessage(R.string.unrooted).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
@@ -63,22 +73,21 @@ public class DialogBuilder {
 	}
 
 
-	public static void showDisclaimer(final Activity context) {
-
-	AlertDialog.Builder builder = new AlertDialog.Builder(context);
-	
-	builder.setMessage(R.string.license);
-	builder.setPositiveButton("Agree", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		}).setNegativeButton("Disagree", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				context.finish();
-			}
-		});
-
-	builder.setCancelable(false);
-	builder.show();
+	public void showDisclaimer(final Activity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+    
+        builder.setMessage(R.string.license);
+        builder.setPositiveButton("Agree", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            }).setNegativeButton("Disagree", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    activity.finish();
+                }
+            });
+    
+        builder.setCancelable(false);
+        builder.show();
 	}
 }

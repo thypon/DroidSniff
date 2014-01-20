@@ -15,6 +15,8 @@
 	<string name="label_networkname_pref">Connected to </string>
 	<string name="label_status_connected">Network status: CONNECTED</string>
 	<string name="label_status_disconnected">Network status: DISCONNECTED</string>
+
+    <string name="authentication_error">Sorry, there was an error loading this Authentication</string>
 	
 	<string name="notification_title">New Session has been captured</string>
 	<string name="notification_text">Tap to open DroidSniff!</string>
@@ -57,4 +59,5 @@
 	<string name="forward">Forward</string>
 	<string name="close">Close</string>
 	<string name="reload">Reload</string>
+    <string name="go">Go</string>
 </resources>
