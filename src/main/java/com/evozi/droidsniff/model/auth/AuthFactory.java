@@ -27,12 +27,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.util.Log;
-import com.evozi.droidsniff.common.Constants;
+import com.evozi.droidsniff.model.Constants;
 import com.evozi.droidsniff.model.Session;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import lombok.Value;
-import lombok.experimental.NonFinal;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;

@@ -1,11 +1,8 @@
 package com.evozi.droidsniff.controller.service;
 
-import java.io.IOException;
-
-import com.evozi.droidsniff.controller.activity.ListenActivity;
-import com.evozi.droidsniff.common.arpspoof.ExecuteCommand;
-import com.evozi.droidsniff.common.Constants;
-import com.evozi.droidsniff.common.SystemHelper;
+import com.evozi.droidsniff.model.Command;
+import com.evozi.droidsniff.model.Constants;
+import com.evozi.droidsniff.model.Executor;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -13,6 +10,8 @@ import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.util.Log;
+import com.evozi.droidsniff.model.Setup;
+import com.evozi.droidsniff.model.auth.AuthChecker;
 
 
 public class DroidSniffService extends IntentService {
@@ -27,8 +26,8 @@ public class DroidSniffService extends IntentService {
 
 	@Override
 	public void onHandleIntent(Intent intent) {
-		final String command = SystemHelper.getDroidSheepBinaryPath(this);
-		SystemHelper.execSUCommand("chmod 777 " + SystemHelper.getDroidSheepBinaryPath(this), ListenActivity.debugging);
+		final String command = Setup.get().getBinaryPath("droidsniff");
+		Executor.get().execSUCommand("chmod 777 " + command);
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		
@@ -36,14 +35,12 @@ public class DroidSniffService extends IntentService {
 		wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "wakeLock");
 		wifiLock.acquire();
 		wakeLock.acquire();
-		
+
 		try {
-			myThread = new ExecuteCommand(command, true);
+			myThread = new Command(command, AuthChecker.get());
 			myThread.setDaemon(true);
 			myThread.start();
 			myThread.join();
-		} catch (IOException e) {
-			Log.e(Constants.APPLICATION_TAG, "error initializing DroidSniff command", e);
 		} catch (InterruptedException e) {
 			Log.i(Constants.APPLICATION_TAG, "DroidSniff was interrupted", e);
 		} finally {
@@ -67,6 +64,6 @@ public class DroidSniffService extends IntentService {
 			myThread = null;
 			tmpThread.interrupt();
 		}
-		SystemHelper.execSUCommand(Constants.CLEANUP_COMMAND_DROIDSNIFF, ListenActivity.debugging);
+		Executor.get().execSUCommand(Constants.CLEANUP_COMMAND_DROIDSNIFF);
 	}
 }

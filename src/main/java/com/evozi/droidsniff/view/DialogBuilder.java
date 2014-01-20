@@ -1,4 +1,4 @@
-package com.evozi.droidsniff.common;
+package com.evozi.droidsniff.view;
 
 import com.evozi.droidsniff.model.BlackList;
 
@@ -9,19 +9,19 @@ import android.content.Intent;
 import android.net.Uri;
 import com.evozi.droidsniff.R;
 
-public class DialogHelper {
+public class DialogBuilder {
 
 	private static Activity context = null;
 
 	public static void installBusyBox(Activity context) {
-		DialogHelper.context = context;
+		DialogBuilder.context = context;
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(R.string.installbusybox).setCancelable(false)
 				.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						Intent goToMarket = null;
 						goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=stericson.busybox"));
-						DialogHelper.context.startActivity(goToMarket);
+						DialogBuilder.context.startActivity(goToMarket);
 						dialog.cancel();
 					}
 				}).setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
@@ -34,7 +34,7 @@ public class DialogHelper {
 	}
 
 	public static void clearBlacklist(Activity context) {
-		DialogHelper.context = context;
+		DialogBuilder.context = context;
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(R.string.clear_blacklist).setCancelable(false)
 				.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
@@ -50,37 +50,8 @@ public class DialogHelper {
 		alert.show();
 	}
 
-	/**
-	public static void downloadUpdate(Activity context) {
-		try {
-			String versionStr = getContentFromWeb("http://apps.evozi.com/android/droidsniff/version.php");
-			int versionWeb = Integer.valueOf(versionStr);
-			PackageManager manager = context.getPackageManager();
-			PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
-			int myVersion = info.versionCode;
-			if (myVersion < versionWeb) {
-				DialogHelper.context = context;
-				String message = context.getString(R.string.updatetext);
-				message += getContentFromWeb("http://apps.evozi.com/android/droidsniff/changelog.php");
-	
-				AlertDialog.Builder builder = new AlertDialog.Builder(context);
-				builder.setMessage(message).setCancelable(false)
-						.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
-				AlertDialog alert = builder.create();
-				alert.show();
-			}
-		} catch (Exception e) {
-			Log.e(Constants.APPLICATION_TAG, "Error while checking update: ", e);
-		}
-	}
-	**/
-
 	public static void showUnrooted(Activity context) {
-		DialogHelper.context = context;
+		DialogBuilder.context = context;
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(R.string.unrooted).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
@@ -110,19 +81,4 @@ public class DialogHelper {
 	builder.setCancelable(false);
 	builder.show();
 	}
-
-	/**
-	private static String getContentFromWeb(String url) {
-		try {
-			DefaultHttpClient httpclient = new DefaultHttpClient();
-			HttpGet http = new HttpGet(url);
-			ResponseHandler<String> responseHandler = new BasicResponseHandler();
-			String response = httpclient.execute(http, responseHandler);
-			return response;
-		} catch (Exception e) {
-			return "";
-		}
-	}
-	**/
-
 }

@@ -25,7 +25,7 @@ import org.apache.http.cookie.Cookie;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.evozi.droidsniff.model.auth.Auth;
-import com.evozi.droidsniff.common.Constants;
+import com.evozi.droidsniff.model.Constants;
 import com.evozi.droidsniff.model.Session;
 
 import android.app.AlertDialog;

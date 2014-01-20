@@ -26,12 +26,9 @@
 
 package com.evozi.droidsniff.controller.service;
 
-import java.io.IOException;
-
-import com.evozi.droidsniff.controller.activity.ListenActivity;
-import com.evozi.droidsniff.common.arpspoof.ExecuteCommand;
-import com.evozi.droidsniff.common.Constants;
-import com.evozi.droidsniff.common.SystemHelper;
+import com.evozi.droidsniff.model.Command;
+import com.evozi.droidsniff.model.Constants;
+import com.evozi.droidsniff.model.Executor;
 
 
 import android.app.IntentService;
@@ -41,6 +38,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Log;
+import com.evozi.droidsniff.model.Setup;
 
 public class ArpspoofService extends IntentService {
 
@@ -70,13 +68,13 @@ public class ArpspoofService extends IntentService {
 		
 		final String command = localBin + " -i " + wifiInterface + " " + gateway;
 
-		SystemHelper.execSUCommand("chmod 777 " + SystemHelper.getARPSpoofBinaryPath(this), ListenActivity.debugging);
-		SystemHelper.execSUCommand("echo 1 > " + IPV4_FILEPATH, ListenActivity.debugging);
+		Executor.get().execSUCommand("chmod 777 " + Setup.get().getBinaryPath("arpspoof"));
+		Executor.get().execSUCommand("echo 1 > " + IPV4_FILEPATH);
 		
-		SystemHelper.execSUCommand(IPTABLES_CLEAR, 		ListenActivity.debugging);
-		SystemHelper.execSUCommand(IPTABLES_CLEAR_NAT, 	ListenActivity.debugging);
-		SystemHelper.execSUCommand(IPTABLES_POSTROUTE, 	ListenActivity.debugging);
-		SystemHelper.execSUCommand(IPTABLES_ACCEPT_ALL, ListenActivity.debugging);
+		Executor.get().execSUCommand(IPTABLES_CLEAR);
+		Executor.get().execSUCommand(IPTABLES_CLEAR_NAT);
+		Executor.get().execSUCommand(IPTABLES_POSTROUTE);
+		Executor.get().execSUCommand(IPTABLES_ACCEPT_ALL);
 
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -85,12 +83,10 @@ public class ArpspoofService extends IntentService {
 		wifiLock.acquire();
 		wakeLock.acquire();
 		try {
-			myThread = new ExecuteCommand(command, false);
+			myThread = new Command(command);
 			myThread.setDaemon(true);
 			myThread.start();
 			myThread.join();
-		} catch (IOException e) {
-			Log.e(TAG, "error initializing arpspoof command", e);
 		} catch (InterruptedException e) {
 			Log.i(TAG, "Spoofing was interrupted", e);
 		} finally {
@@ -110,12 +106,10 @@ public class ArpspoofService extends IntentService {
 	public void onDestroy() {
 		Thread killAll;
 		try {
-			killAll = new ExecuteCommand("killall arpspoof", false);
+			killAll = new Command("killall arpspoof");
 			killAll.setDaemon(true);
 			killAll.start();
 			killAll.join();
-		} catch (IOException e) {
-			Log.w(TAG, "error initializing killall arpspoof command", e);
 		} catch (InterruptedException e) {
 			// don't care
 		}
@@ -136,7 +130,7 @@ public class ArpspoofService extends IntentService {
 			tmpThread.interrupt();
 		}
 		**/
-		SystemHelper.execSUCommand(Constants.CLEANUP_COMMAND_ARPSPOOF, ListenActivity.debugging);
-//		SystemHelper.execSUCommand("echo 0 > " + IPV4_FILEPATH, ListenActivity.debugging);
+		Executor.get().execSUCommand(Constants.CLEANUP_COMMAND_ARPSPOOF);
+//		Executor.execSUCommand("echo 0 > " + IPV4_FILEPATH, ListenActivity.debugging);
 	}
 }

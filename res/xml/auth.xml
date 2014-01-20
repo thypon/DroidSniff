@@ -120,12 +120,12 @@
         <cookieName>ext_id</cookieName>
         <cookieName>XSESSIONID</cookieName>
     </auth>
-    <auth>
+    <!--auth>
         <name>Gowalla</name>
         <domain>gowalla.com</domain>
         <url>https://gowalla.com/home</url>
         <cookieName>__utma</cookieName>
-    </auth>
+    </auth-->
     <auth>
         <name>Harvest</name>
         <domain>harvestapp.com</domain>
@@ -204,10 +204,10 @@
         <mobileUrl>http://www.reddit.com/.compact</mobileUrl>
 		<cookieName>reddit_session</cookieName>
 	</auth>
-	<auth>
+	<!--auth>
 		<name>Yelp</name>
 		<domain>yelp.com</domain>
 		<url>http://www.yelp.com</url>
 		<cookieName>__utma</cookieName>
-	</auth>
+	</auth-->
 </authdefinitions>

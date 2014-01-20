@@ -4,11 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import com.evozi.droidsniff.common.Constants;
 import lombok.NonNull;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 

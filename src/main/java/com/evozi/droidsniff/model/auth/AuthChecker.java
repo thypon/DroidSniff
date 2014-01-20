@@ -3,15 +3,15 @@ package com.evozi.droidsniff.model.auth;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
-import android.util.Log;
 import com.evozi.droidsniff.R;
-import com.evozi.droidsniff.common.Constants;
 import com.evozi.droidsniff.controller.activity.ListenActivity;
 import com.evozi.droidsniff.model.BlackList;
+import com.evozi.droidsniff.model.Processor;
 import com.evozi.droidsniff.model.event.AuthEvent;
 import com.evozi.droidsniff.model.event.AuthEventType;
 import de.greenrobot.event.EventBus;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
-public final class AuthChecker {
+public final class AuthChecker implements Processor {
     private final HashMap<String, IAuthFactory> authDefList = new HashMap<String, IAuthFactory>();
     private final IAuthFactory generic = new GenericAuthFactory();
 
@@ -32,16 +32,11 @@ public final class AuthChecker {
         ctx = app;
     }
 
+    @SneakyThrows({IOException.class, XmlPullParserException.class})
     public static AuthChecker get() {
         if (instance == null) {
             instance = new AuthChecker();
-            try {
-                instance.readConfig(ctx);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            }
+            instance.readConfig(ctx);
         }
 
         return instance;
@@ -112,9 +107,6 @@ public final class AuthChecker {
             IAuthFactory ad = authDefList.get(key);
             Auth a = ad.getAuth(line);
             if (a != null) {
-                if (Constants.DEBUG) {
-                    Log.d(Constants.APPLICATION_TAG, "MATCH:" + a.getName());
-                }
                 if (BlackList.get().contains(a.getName())) {
                     continue;
                 }

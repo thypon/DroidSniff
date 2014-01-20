@@ -28,21 +28,18 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.evozi.droidsniff.model.BlackList;
-import com.evozi.droidsniff.model.DB;
-import com.evozi.droidsniff.model.MailSender;
+import com.evozi.droidsniff.model.*;
 import com.evozi.droidsniff.model.auth.Auth;
-import com.evozi.droidsniff.common.Constants;
-import com.evozi.droidsniff.common.DialogHelper;
-import com.evozi.droidsniff.common.SetupHelper;
-import com.evozi.droidsniff.common.SystemHelper;
+import com.evozi.droidsniff.model.Constants;
+import com.evozi.droidsniff.model.auth.AuthManager;
+import com.evozi.droidsniff.view.DialogBuilder;
+import com.evozi.droidsniff.model.Executor;
 import com.evozi.droidsniff.model.event.AuthEvent;
 import com.evozi.droidsniff.model.event.WifiChangeEvent;
 import com.evozi.droidsniff.view.SessionListView;
@@ -110,8 +107,6 @@ public class ListenActivity extends SherlockActivity implements
 	private int lastNotification = 0;
 	private NotificationManager mNotificationManager = null;
 
-	public static StringBuffer debugBuffer = null;
-	public static boolean debugging = false;
 
 	public static boolean generic = true;
 	private Handler handler = new Handler() {
@@ -191,11 +186,6 @@ public class ListenActivity extends SherlockActivity implements
 				stopSpoofing();
 				refreshHandler.stop();
 				refresh();
-				if (debugging) {
-					MailSender.get().sendStringByMail(debugBuffer.toString());
-					debugging = false;
-					debugBuffer = null;
-				}
 			}
 		};
 	};
@@ -276,32 +266,27 @@ public class ListenActivity extends SherlockActivity implements
 
         EventBus.getDefault().register(this);
 
-		if (DEBUG)
-			Log.d(APPLICATION_TAG, "ONCREATE");
-
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-		SetupHelper.checkPrerequisites(this.getApplicationContext());
+		Setup.get().prepareBinaries();
 
 		WifiChangeReceiver wi = new WifiChangeReceiver();
 		this.getApplicationContext().registerReceiver(wi,
 				new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
-		if (!SetupHelper.checkSu()) {
-			DialogHelper.showUnrooted(this);
+		if (!Setup.get().checkSu()) {
+			DialogBuilder.showUnrooted(this);
 		}
-		if (!SetupHelper.checkCommands()) {
-			DialogHelper.installBusyBox(this);
+		if (!Setup.get().checkCommands()) {
+			DialogBuilder.installBusyBox(this);
 		}
 
-		DialogHelper.showDisclaimer(this);
+		DialogBuilder.showDisclaimer(this);
 
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		if (DEBUG)
-			Log.d(APPLICATION_TAG, "ONSTART");
 
 		setContentView(R.layout.listen);
 
@@ -330,7 +315,7 @@ public class ListenActivity extends SherlockActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		SystemHelper.readAuthFiles(this, handler);
+		AuthManager.get().read();
 		refresh();
 	}
 
@@ -406,11 +391,8 @@ public class ListenActivity extends SherlockActivity implements
 			refresh();
 			mNotificationManager.cancelAll();
 			break;
-		case MENU_DEBUG_ID:
-			askDebug();
-			break;
 		case MENU_CLEAR_BLACKLIST_ID:
-			DialogHelper.clearBlacklist(this);
+			DialogBuilder.clearBlacklist(this);
 			break;
 		}
 		return false;
@@ -439,12 +421,12 @@ public class ListenActivity extends SherlockActivity implements
 			break;
 		case ID_SAVE:
 			a = authList.get(sessionListViewSelected);
-			SystemHelper.saveAuthToFile(this, a);
+			AuthManager.get().save(a);
 			refresh();
 			break;
 		case ID_DELETE:
 			a = authList.get(sessionListViewSelected);
-			SystemHelper.deleteAuthFile(this, a);
+			AuthManager.get().delete(a);
 			refresh();
 			break;
 		case ID_EXPORT:
@@ -575,8 +557,6 @@ public class ListenActivity extends SherlockActivity implements
 	// ############################################################################
 
 	private void startSpoofing() {
-		if (DEBUG)
-			Log.d(APPLICATION_TAG, "START SPOOFING");
 		WifiManager wManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		WifiInfo wInfo = wManager.getConnectionInfo();
 
@@ -614,8 +594,7 @@ public class ListenActivity extends SherlockActivity implements
 			Intent intent = new Intent(this, ArpspoofService.class);
 			Bundle mBundle = new Bundle();
 			mBundle.putString("gateway", gatewayIP);
-			mBundle.putString("localBin",
-					SystemHelper.getARPSpoofBinaryPath(this));
+			mBundle.putString("localBin", Setup.get().getBinaryPath("arpspoof"));
 			mBundle.putString("interface", interfaceName);
 			intent.putExtras(mBundle);
 
@@ -632,8 +611,6 @@ public class ListenActivity extends SherlockActivity implements
 	}
 
 	public void stopSpoofing() {
-		if (DEBUG)
-			Log.d(APPLICATION_TAG, "STOP SPOOFING");
 		Intent intent = new Intent(this, ArpspoofService.class);
 		stopService(intent);
 		try {
@@ -643,8 +620,6 @@ public class ListenActivity extends SherlockActivity implements
 	}
 
 	public void stopListening() {
-		if (DEBUG)
-			Log.d(APPLICATION_TAG, "STOP LISTENING");
 		Intent intent = new Intent(this, DroidSniffService.class);
 		stopService(intent);
 		try {
@@ -737,9 +712,7 @@ public class ListenActivity extends SherlockActivity implements
 	**/
 
 	private void startListening() {
-		if (DEBUG)
-			Log.d(APPLICATION_TAG, "START SPOOFING");
-		SystemHelper.execSUCommand(CLEANUP_COMMAND_DROIDSNIFF, debugging);
+		Executor.get().execSUCommand(CLEANUP_COMMAND_DROIDSNIFF);
 		updateNetworkSettings();
 
 		if (networkEncryptionWPA && !isSpoofing()) {
@@ -776,8 +749,8 @@ public class ListenActivity extends SherlockActivity implements
 		button.setText("Start");
 		stopSpoofing();
 		stopListening();
-		SystemHelper.execNewSUCommand(CLEANUP_COMMAND_ARPSPOOF, false);
-		SystemHelper.execNewSUCommand(CLEANUP_COMMAND_DROIDSNIFF, false);
+		Executor.get().execNewSUCommand(CLEANUP_COMMAND_ARPSPOOF);
+		Executor.get().execNewSUCommand(CLEANUP_COMMAND_DROIDSNIFF);
 	}
 
 	private void refresh() {
@@ -787,11 +760,7 @@ public class ListenActivity extends SherlockActivity implements
 
 		Button bstartstop = (Button) findViewById(R.id.bstartstop);
 		if (listening) {
-			if (debugging) {
-				bstartstop.setText("Stop debugging");
-			} else {
-				bstartstop.setText("Stop");
-			}
+    		bstartstop.setText("Stop");
 		} else {
 			bstartstop.setText("Start");
 			mNotificationManager.cancelAll();
@@ -861,7 +830,7 @@ public class ListenActivity extends SherlockActivity implements
 		lastNotification = authList.size();
 
 		int icon = R.drawable.ic_stat_session;
-		long when = System.currentTimeMillis();
+		long when = java.lang.System.currentTimeMillis();
 		Notification notification = new Notification(icon,
 				getString(R.string.notification_title), when);
 
@@ -881,47 +850,5 @@ public class ListenActivity extends SherlockActivity implements
 					getString(R.string.notification_text), contentIntent);
 		}
 		mNotificationManager.notify(NOTIFICATION_ID, notification);
-	}
-
-	private void askDebug() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(R.string.popup_debug)
-				.setCancelable(false)
-				.setPositiveButton(R.string.button_ok,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								ListenActivity.this.startDebug();
-							}
-						})
-				.setNegativeButton(R.string.button_abprt,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
-	private void startDebug() {
-		debugBuffer = new StringBuffer();
-		debugging = true;
-		debugBuffer.append("DEBUG SESSION START! ");
-		debugBuffer.append(new Date());
-		debugBuffer.append("\n");
-
-		SystemHelper.debugInformation(this);
-		SetupHelper.debugInformation(this);
-
-		stopListening();
-		stopSpoofing();
-
-		SetupHelper.checkPrerequisites(this);
-
-		Message m = handler.obtainMessage();
-		Bundle b = new Bundle();
-		b.putString(BUNDLE_KEY_TYPE, BUNDLE_TYPE_START);
-		m.setData(b);
-		handler.sendMessage(m);
 	}
 }

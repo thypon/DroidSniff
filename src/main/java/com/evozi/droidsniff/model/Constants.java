@@ -1,4 +1,4 @@
-package com.evozi.droidsniff.common;
+package com.evozi.droidsniff.model;
 
 import java.util.*;
 
@@ -21,9 +21,7 @@ public interface Constants {
 	public static final String 	BUNDLE_KEY_MOBILE 			= "MOBILE";
 	public static final String 	BUNDLE_KEY_AUTH 			= "AUTH";
 	public static final String 	BUNDLE_KEY_NOROOT 			= "NOROOT";
-	
-	public static final boolean DEBUG 						= true;
-	
+
 	public static final String 	CLEANUP_COMMAND_DROIDSNIFF 	= "killall droidsniff\n";
 	public static final String 	CLEANUP_COMMAND_ARPSPOOF   	= "killall arpspoof\n";
 	
