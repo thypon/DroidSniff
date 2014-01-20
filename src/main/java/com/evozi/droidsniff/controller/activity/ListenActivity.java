@@ -34,6 +34,8 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.evozi.droidsniff.controller.service.ArpspoofService;
+import com.evozi.droidsniff.controller.service.DroidsniffService;
 import com.evozi.droidsniff.model.*;
 import com.evozi.droidsniff.model.auth.Auth;
 import com.evozi.droidsniff.model.Constants;
@@ -44,8 +46,6 @@ import com.evozi.droidsniff.model.event.AuthEvent;
 import com.evozi.droidsniff.model.event.WifiChangeEvent;
 import com.evozi.droidsniff.view.SessionListView;
 import com.evozi.droidsniff.controller.receiver.WifiChangeReceiver;
-import com.evozi.droidsniff.controller.service.ArpspoofService;
-import com.evozi.droidsniff.controller.service.DroidSniffService;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -620,7 +620,7 @@ public class ListenActivity extends SherlockActivity implements
 	}
 
 	public void stopListening() {
-		Intent intent = new Intent(this, DroidSniffService.class);
+		Intent intent = new Intent(this, DroidsniffService.class);
 		stopService(intent);
 		try {
 			Thread.sleep(200);
@@ -644,7 +644,7 @@ public class ListenActivity extends SherlockActivity implements
 		ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 		for (RunningServiceInfo service : manager
 				.getRunningServices(Integer.MAX_VALUE)) {
-			if (DroidSniffService.class.getName().equals(
+			if (DroidsniffService.class.getName().equals(
 					service.service.getClassName())) {
 				return true;
 			}
@@ -725,7 +725,7 @@ public class ListenActivity extends SherlockActivity implements
 		Button bstartstop = (Button) findViewById(R.id.bstartstop);
 
 		if (!isListening()) {
-			Intent intent = new Intent(this, DroidSniffService.class);
+			Intent intent = new Intent(this, DroidsniffService.class);
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
